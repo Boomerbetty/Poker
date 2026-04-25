@@ -204,11 +204,14 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
 /* ═══════════════════════════════════
    MOBILE — everything under 768px
 ═══════════════════════════════════ */
+/* Hide mobile nav on desktop */
+#mobile-nav { display: none; }
 @media (max-width: 768px) {
+  #mobile-nav { display: flex !important; }
 
   /* Hide both sidebars by default on mobile */
   #sb-left, #sb-right { width: 0 !important; opacity: 0 !important; overflow: hidden !important; border-width: 0 !important; }
-  #btn-stats, #btn-skl { display: none; }
+  #btn-stats, #btn-skl { display: none !important; }
 
   /* Topbar compact */
   .topbar { padding: 8px 12px !important; }
@@ -329,8 +332,8 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
       </div>
     </div>
     <div class="topbar-controls">
-      <button class="tbtn on" id="btn-stats" onclick="toggleSidebar('left')">📊 Stats</button>
-      <button class="tbtn on" id="btn-skl" onclick="toggleSidebar('right')">📖 Reference</button>
+      <button class="tbtn" id="btn-stats" onclick="toggleSidebar('left')">📊 Stats</button>
+      <button class="tbtn" id="btn-skl" onclick="toggleSidebar('right')">📖 Reference</button>
       <button class="tbtn" id="btn-mute" onclick="toggleMute()">🔊 Mute</button>
     </div>
   </div>
@@ -338,7 +341,7 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
   <div class="body-row">
 
     <!-- LEFT SIDEBAR: Stats -->
-    <div class="sidebar left" id="sb-left">
+    <div class="sidebar left closed" id="sb-left">
       <div class="sb-inner">
         <div class="sb-section" id="sb-session" style="display:none">
           <h2>Session</h2>
@@ -515,7 +518,7 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
     </div><!-- /center -->
 
     <!-- RIGHT SIDEBAR: Reference -->
-    <div class="sidebar right" id="sb-right">
+    <div class="sidebar right closed" id="sb-right">
       <div class="sb-inner">
         <div class="sb-section">
           <h2>Sklansky Hand Groups</h2>
@@ -542,15 +545,15 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
 </div>
 
 <!-- Mobile bottom nav — only visible on small screens -->
-<div id="mobile-nav" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,14,0.97);border-top:1px solid rgba(201,168,76,0.25);padding:8px 16px;padding-bottom:max(8px,env(safe-area-inset-bottom));flex-direction:row;justify-content:space-around;align-items:center;z-index:50">
-  <button onclick="mobileSidebar('left')" id="mob-stats" style="background:transparent;border:none;color:rgba(122,142,122,0.8);font-size:10px;font-family:'Inter',sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 16px;cursor:pointer">
-    <span style="font-size:18px">📊</span>Stats
+<div id="mobile-nav" style="display:flex;position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,14,0.97);border-top:1px solid rgba(201,168,76,0.25);padding:8px 16px;padding-bottom:max(8px,env(safe-area-inset-bottom));flex-direction:row;justify-content:space-around;align-items:center;z-index:50">
+  <button onclick="mobileSidebar('left')" id="mob-stats" style="background:transparent;border:none;color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
+    <span style="font-size:22px">📊</span>Stats
   </button>
-  <button onclick="mobileSidebar('right')" id="mob-ref" style="background:transparent;border:none;color:rgba(122,142,122,0.8);font-size:10px;font-family:'Inter',sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 16px;cursor:pointer">
-    <span style="font-size:18px">📖</span>Reference
+  <button onclick="mobileSidebar('right')" id="mob-ref" style="background:transparent;border:none;color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
+    <span style="font-size:22px">📖</span>Reference
   </button>
-  <button onclick="toggleMute()" id="mob-mute" style="background:transparent;border:none;color:rgba(122,142,122,0.8);font-size:10px;font-family:'Inter',sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 16px;cursor:pointer">
-    <span style="font-size:18px">🔊</span>Sound
+  <button onclick="toggleMute()" id="mob-mute" style="background:transparent;border:none;color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
+    <span style="font-size:22px" id="mob-mute-icon">🔊</span>Sound
   </button>
 </div>
 
@@ -567,9 +570,7 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
 <script>
 // Mobile nav visibility
 function updateMobileNav(){
-  const nav=document.getElementById('mobile-nav');
-  if(window.innerWidth<=768) nav.style.display='flex';
-  else nav.style.display='none';
+  // Handled by CSS media queries now
 }
 window.addEventListener('resize', updateMobileNav);
 
@@ -1208,7 +1209,12 @@ function toggleSidebar(side){
   sb.classList.toggle('closed');
   btn.classList.toggle('on');
 }
-function toggleMute(){const m=SFX.toggleMute();document.getElementById('btn-mute').textContent=m?'🔇 Mute':'🔊 Mute';}
+function toggleMute(){
+  const m=SFX.toggleMute();
+  document.getElementById('btn-mute').textContent=m?'🔇 Mute':'🔊 Mute';
+  const mobIcon=document.getElementById('mob-mute-icon');
+  if(mobIcon) mobIcon.textContent=m?'🔇':'🔊';
+}
 function showToast(msg){
   let t=document.getElementById('toast-el');
   if(!t){t=document.createElement('div');t.id='toast-el';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--gold);color:#1a1a0a;padding:9px 22px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999';document.body.appendChild(t);}
@@ -1218,13 +1224,7 @@ function showToast(msg){
 
 document.addEventListener('DOMContentLoaded',()=>{
   buildSKLSidebar();buildFishScale();updateSBLifetime();showIntroLifetime();refreshHammerheadOption();show('scr-intro');
-  // On mobile, ensure sidebars start closed and buttons reflect that
-  if(window.innerWidth <= 768){
-    document.getElementById('sb-left').classList.add('closed');
-    document.getElementById('sb-right').classList.add('closed');
-    document.getElementById('btn-stats').classList.remove('on');
-    document.getElementById('btn-skl').classList.remove('on');
-  }
+  // Sidebars start closed by default (set in HTML)
 });
 </script>
 </body>
