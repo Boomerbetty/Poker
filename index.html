@@ -703,12 +703,14 @@ function pickScen(pos,diff){
 function scenHTML(pos,scen){
   const rp=['UTG','UTG+1','HJ','CO','BTN'].filter(x=>x!==pos);
   const rv=rp[Math.floor(Math.random()*rp.length)]||'UTG';
+  G.curHand.raiser=rv;
   const nl=Math.floor(Math.random()*3)+1;
 
-  // Randomised stack depths (BB)
+  // Randomised stack depths (BB) — set based on scenario type
   const stdStacks=[30,40,50,60,75];
   const stack=stdStacks[Math.floor(Math.random()*stdStacks.length)];
-  G.curHand.stack=stack;
+  // Only set stack now for non-shove scenarios; shove sets its own below
+  if(scen!=='short_stack_shove') G.curHand.stack=stack;
 
   // Villain archetypes — affect how we frame the scenario
   const villains=[
@@ -833,7 +835,7 @@ function getCorrect(grp,pos,scen){
   if(scen==='facing_3bet'){
     const r=PRANGES[pos];const gn=SKL[grp]?.name||'Unknown';
     const eq=EQUITY[grp]||EQUITY[9];
-    if(grp<=1)return{a:'threebet',alt:'allin',ev:2.0,reason:`<strong>Group 1 vs a 3-bet</strong> — 4-bet for value every time. AA/KK/QQ/JJ/AKs are the nuts of the pre-flop range.<br><br><strong style="color:var(--gold)">Equity: ${eq.vt3b} vs a standard 3-bet range</strong> — you are a massive favorite. Getting all-in pre is correct at 50BB with these hands. Never flat a 3-bet with AA or KK — you give away value and let dominated hands realize equity cheaply.`};
+    if(grp<=1)return{a:'threebet',alt:'allin',ev:2.0,reason:`<strong>Group 1 vs a 3-bet</strong> — 4-bet for value every time. AA/KK/QQ/JJ/AKs are the nuts of the pre-flop range.<br><br><strong style="color:var(--gold)">Equity: ${eq.vt3b} vs a standard 3-bet range</strong> — you are a massive favorite. Getting all-in pre is correct at <strong>${stack}BB</strong> with these hands. Never flat a 3-bet with AA or KK — you give away value and let dominated hands realize equity cheaply.`};
     if(grp<=2&&['BTN','CO'].includes(pos))return{a:'threebet',alt:'call',ev:1.4,reason:`<strong>Group 2 in position facing a 3-bet</strong> — 4-betting as a bluff/value hybrid is valid. Calling in position is also reasonable.<br><br><strong style="color:var(--gold)">Equity: ${eq.vt3b} vs a standard 3-bet range</strong> — you are a ${eq.note}. Folding is a significant mistake here. You have enough equity to play a big pot, especially with position.`};
     if(grp<=3&&['BTN','CO'].includes(pos))return{a:'call',alt:'fold',ev:0.6,reason:`<strong>Group 3 in late position facing a 3-bet</strong> — calling in position is marginal but defensible.<br><br><strong style="color:var(--gold)">Equity: ${eq.vt3b} vs a standard 3-bet range</strong> — you are ${eq.note}. Proceed carefully. Fold to heavy action on dangerous boards. Never 4-bet this hand for value — you don't have enough equity to build a huge pot.`};
     return{a:'fold',ev:0,reason:`<strong>Group ${grp} (${gn}) facing a 3-bet from ${pos}</strong> — fold.<br><br><strong style="color:var(--wrong)">Equity: ${eq.vt3b} vs a standard 3-bet range</strong> — you are ${eq.note}. 3-bet pots require premium holdings to continue. The pot odds and implied odds do not compensate for the equity deficit you face here.`};
@@ -861,10 +863,14 @@ function getCorrect(grp,pos,scen){
   // ── STANDARD SCENARIOS ──
   const stack=G.curHand?.stack||50;
   const villain=G.curHand?.villain||{label:'a TAG regular',style:'tag'};
-  // Stack-depth modifier: at 30BB tighten calling ranges; at 60-75BB loosen slightly
-  const stackNote=stack<=30?` At <strong>${stack}BB</strong> stack depth, ranges tighten — fold equity is lower and commitment thresholds are closer.`:
-                  stack>=60?` At <strong>${stack}BB</strong> deep, implied odds increase — suited connectors and small pairs gain value.`:
-                  ` Stack depth: <strong>${stack}BB</strong>.`;
+  const rv=G.curHand?.raiser||'the opener';
+  // Stack-depth modifier — only meaningful for standard scenarios (not shove which has own logic)
+  const stackNote=(scen==='short_stack_shove')?'':
+                  stack<=30?` At <strong>${stack}BB</strong>, ranges tighten — fold equity is lower and stack-off thresholds are closer. Shove-or-fold logic starts to apply.`:
+                  stack<=40?` At <strong>${stack}BB</strong>, you are approaching push-or-fold territory. Prefer raises that pot-commit you to strong hands only.`:
+                  stack>=75?` At <strong>${stack}BB</strong> deep, implied odds increase significantly — suited connectors and small pairs gain value when played in position.`:
+                  stack>=60?` At <strong>${stack}BB</strong> deep, implied odds are elevated — position and post-flop skill matter more than at shorter depths.`:
+                  ` Stack: <strong>${stack}BB</strong>.`;
   // Villain style note
   const villainNote=villain.style==='lag'?` Note: vs a LAG opener, your calling and 3-bet ranges widen — their range is wide enough that you have more equity than vs a TAG.`:
                     villain.style==='nit'?` Note: vs a nit, tighten up significantly — their opening range is extremely narrow. Fold more, 3-bet only the top of your range.`:
@@ -876,13 +882,13 @@ function getCorrect(grp,pos,scen){
     if(grp<=1)return{a:'raise3',alt:'threebet',ev:1.2,reason:`<strong>Group 1 (${gn})</strong> — mandatory open from every seat. Raise 3BB minimum; consider 3-betting if there will be callers behind. These hands want value and isolation.`};
     if(grp<=r.o)return{a:'raise3',ev:1.0,reason:`<strong>Group ${grp} (${gn})</strong> is within your opening range from <strong>${pos}</strong>. Open to 3BB. This hand has enough equity and playability to profit as the preflop aggressor.`};
     if(grp<=r.o+1)return{a:'fold',alt:'raise3',ev:0.1,reason:`<strong>Group ${grp} (${gn})</strong> is just outside your standard opening range from <strong>${pos}</strong>. Folding is marginally correct. A disciplined steal vs weak lineups is acceptable but not the default.`};
-    return{a:'fold',ev:0,reason:`<strong>Group ${grp} (${gn}) from ${pos}</strong> — fold. This hand is outside your profitable opening range. Playing it leaks chips over thousands of hands. This is the discipline that separates winning from losing players.${stackNote}`};
+    return{a:'fold',ev:0,reason:`<strong>Group ${grp} (${gn}) — you are in ${pos}, first to act</strong> — fold. This hand is outside your profitable opening range from early/middle position. Playing it leaks chips over thousands of hands. Discipline in these spots separates winning players from losing ones.${stackNote}`};
   }
   if(scen==='facing_raise'){
     if(grp<=1)return{a:'threebet',ev:1.5,reason:`<strong>Group 1 facing a raise</strong> — always 3-bet for value. Maximum money in the pot when you have the best hand. Calling here gives your opponent too much information and lets speculative hands in cheaply.`};
     if(grp<=2&&['CO','BTN','HJ'].includes(pos))return{a:'threebet',alt:'call',ev:1.1,reason:`<strong>Group ${grp} in late position facing a raise</strong> — 3-bet applies pressure and has fold equity. Calling in position is also profitable. Both lines work; 3-bet is slightly preferred as the aggressor.`};
-    if(grp<=r.c)return{a:'call',ev:0.4,reason:`<strong>Group ${grp} from ${pos}</strong> — call. Strong enough to continue but not enough to 3-bet for value against ${villain.label}'s range. Realize equity in position; fold to large action on dangerous boards.${villainNote}${stackNote}`};
-    return{a:'fold',ev:0,reason:`<strong>Group ${grp} facing a raise from ${pos}</strong> — fold. Against ${villain.label}'s 3BB open your hand doesn't have the equity or implied odds to continue.${villainNote}${stackNote}`};
+    if(grp<=r.c)return{a:'call',ev:0.4,reason:`<strong>Group ${grp} — you are in ${pos} facing a raise</strong> — call. Strong enough to continue but not enough to 3-bet for value against ${villain.label}'s range. Realize equity in position; fold to large action on dangerous boards.${villainNote}${stackNote}`};
+    return{a:'fold',ev:0,reason:`<strong>Group ${grp} — you are in ${pos} facing a raise</strong> — fold. Against ${villain.label}'s 3BB open, your hand doesn't have the equity or implied odds to continue from this position.${villainNote}${stackNote}`};
   }
   if(scen==='facing_limp'){
     if(grp<=2)return{a:'raise3',ev:1.1,reason:`<strong>Group ${grp} vs limpers</strong> — always isolate. Limpers signal weakness. Raise to 4–5BB, build a pot you dominate. Never limp behind with a strong hand — take the initiative.`};
