@@ -221,7 +221,7 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
   .tbtn { padding: 5px 9px !important; font-size: 11px !important; }
 
   /* Center content full width */
-  .center { padding: 10px 12px 70px 12px !important; overflow-y: auto; }
+  .center { padding: 10px 12px 90px 12px !important; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
   /* Intro screen */
   .intro { padding: 6px 0 80px 0 !important; }
@@ -273,17 +273,19 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
   /* Action buttons — 2 per row, bigger tap targets */
   .act-lbl { font-size: 9px !important; margin-bottom: 6px !important; }
   .act-grid { gap: 6px !important; }
-  .abtn { font-size: 12px !important; padding: 10px 10px !important; flex: 1 1 calc(50% - 6px) !important; text-align: center !important; }
+  .abtn { font-size: 13px !important; padding: 12px 10px !important; flex: 1 1 calc(50% - 6px) !important; text-align: center !important; background: rgba(201,168,76,0.15) !important; border: 1.5px solid var(--gold) !important; color: var(--gold) !important; font-weight: 600 !important; }
+  .abtn:disabled { background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.15) !important; color: rgba(255,255,255,0.3) !important; }
+  .abtn.sel { background: var(--gold) !important; color: #1a1a0a !important; border-color: var(--gold) !important; }
 
   /* Result box */
   .res-box { padding: 10px 12px !important; }
   .res-title { font-size: 12px !important; }
   .res-body { font-size: 11px !important; line-height: 1.6 !important; }
-  .next-row { margin-top: 10px !important; }
-  .btn-outline { font-size: 12px !important; padding: 9px 18px !important; }
+  .next-row { margin-top: 10px !important; margin-bottom: 20px !important; }
+  .btn-outline { font-size: 14px !important; padding: 13px 18px !important; width: 100% !important; text-align: center !important; background: var(--gold) !important; color: #1a1a0a !important; border-color: var(--gold) !important; font-weight: 700 !important; }
 
   /* Table area padding */
-  .table-area { padding: 12px !important; margin-bottom: 10px !important; }
+  .table-area { padding: 12px !important; margin-bottom: 10px !important; padding-bottom: 16px !important; }
 
   /* Results screen */
   .results { max-width: 100% !important; padding: 6px 0 80px 0 !important; }
@@ -303,6 +305,8 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
   .hh-meta { font-size: 9px !important; }
   .hh-rat { font-size: 10px !important; line-height: 1.55 !important; }
   .r-actions { gap: 8px !important; margin-top: 14px !important; }
+  .r-actions .btn-gold { width: 100% !important; padding: 14px !important; font-size: 15px !important; }
+  .r-actions .btn-outline { background: rgba(201,168,76,0.15) !important; color: var(--gold) !important; border: 1.5px solid var(--gold) !important; width: 100% !important; padding: 14px !important; font-size: 15px !important; font-weight: 600 !important; }
 
   /* Hammerhead banner */
   #r-hammerhead-banner { padding: 11px 14px !important; }
@@ -546,13 +550,13 @@ select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--
 
 <!-- Mobile bottom nav — only visible on small screens -->
 <div id="mobile-nav" style="display:flex;position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,14,0.97);border-top:1px solid rgba(201,168,76,0.25);padding:8px 16px;padding-bottom:max(8px,env(safe-area-inset-bottom));flex-direction:row;justify-content:space-around;align-items:center;z-index:50">
-  <button onclick="mobileSidebar('left')" id="mob-stats" style="background:transparent;border:none;color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
+  <button onclick="mobileSidebar('left')" id="mob-stats" style="background:rgba(201,168,76,0.08);border:none;border-right:1px solid var(--gold-dim);color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
     <span style="font-size:22px">📊</span>Stats
   </button>
-  <button onclick="mobileSidebar('right')" id="mob-ref" style="background:transparent;border:none;color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
+  <button onclick="mobileSidebar('right')" id="mob-ref" style="background:rgba(201,168,76,0.08);border:none;border-right:1px solid var(--gold-dim);color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
     <span style="font-size:22px">📖</span>Reference
   </button>
-  <button onclick="toggleMute()" id="mob-mute" style="background:transparent;border:none;color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
+  <button onclick="toggleMute()" id="mob-mute" style="background:rgba(201,168,76,0.08);border:none;color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
     <span style="font-size:22px" id="mob-mute-icon">🔊</span>Sound
   </button>
 </div>
