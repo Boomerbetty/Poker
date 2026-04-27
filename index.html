@@ -3,1239 +3,1241 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fold or Feed — Piranha Poker League</title>
+<title>Fold or Feed — Pre-Flop Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Code+Pro:wght@400;600&family=Inter:wght@400;500;600&display=swap');
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --felt:#1a3a2a;--felt-light:#234d38;--felt-dark:#0f2218;
-  --gold:#c9a84c;--gold-light:#e8c96d;--gold-dim:rgba(201,168,76,0.28);
-  --card-bg:#faf8f0;--card-border:#c8bfa0;
-  --text:#e8e0cc;--muted:#6a8070;
-  --correct:#3a9e5a;--wrong:#cc3333;--partial:#c9a84c;
-  --screen:#080f0a;--sbw:310px;
-}
-html,body{height:100%;overflow:hidden}
-body{font-family:'Inter',sans-serif;background:var(--screen);color:var(--text)}
+  :root {
+    --felt: #0f3d1e;
+    --felt-light: #1a5c2e;
+    --felt-mid: #144d25;
+    --gold: #d4a843;
+    --gold-light: #f5d67a;
+    --gold-dark: #8a6520;
+    --cream: #f5f0e8;
+    --card-white: #fefefe;
+    --red: #c0392b;
+    --red-light: #e74c3c;
+    --black: #1a1a1a;
+    --chip-red: #c0392b;
+    --chip-black: #1e1e1e;
+    --chip-green: #27ae60;
+    --chip-blue: #2980b9;
+    --text-muted: rgba(245,240,232,0.55);
+    --border-gold: rgba(212,168,67,0.35);
+  }
 
-/* ── SHELL ── */
-.shell{display:flex;flex-direction:column;height:100vh}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-bottom:1px solid var(--gold-dim);background:rgba(10,22,14,0.95);flex-shrink:0;gap:12px}
-.topbar-brand{display:flex;flex-direction:column}
-.topbar-brand h1{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold);line-height:1.1}
-.topbar-brand .sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
-.topbar-controls{display:flex;gap:6px;align-items:center}
-.tbtn{background:transparent;border:1px solid var(--gold-dim);color:var(--muted);padding:6px 13px;border-radius:6px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;font-weight:500;transition:all .15s;white-space:nowrap}
-.tbtn:hover{border-color:var(--gold);color:var(--gold)}
-.tbtn.on{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08)}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── MAIN ── */
-.body-row{display:flex;flex:1;overflow:hidden}
-.center{flex:1;overflow-y:auto;padding:16px 20px;min-width:0}
+  body {
+    background: var(--felt);
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--cream);
+    min-height: 100vh;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.012) 40px, rgba(255,255,255,0.012) 41px),
+      repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.012) 40px, rgba(255,255,255,0.012) 41px);
+  }
 
-/* ── SIDEBARS ── */
-.sidebar{width:var(--sbw);flex-shrink:0;background:var(--felt-dark);overflow-y:auto;border-color:var(--gold-dim);transition:width .28s ease,opacity .28s ease}
-.sidebar.closed{width:0;opacity:0;overflow:hidden;border-width:0}
-.sb-inner{padding:14px;min-width:var(--sbw)}
-.sidebar.left{border-right:1px solid var(--gold-dim)}
-.sidebar.right{border-left:1px solid var(--gold-dim)}
-.sb-section{margin-bottom:18px}
-.sb-section h2{font-family:'Playfair Display',serif;font-size:14px;color:var(--gold);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--gold-dim)}
+  /* ─── HEADER ─── */
+  .header {
+    text-align: center;
+    padding: 28px 20px 16px;
+    border-bottom: 1px solid var(--border-gold);
+    position: relative;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .header p {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
 
-/* stat rows */
-.srow{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px}
-.srow:last-child{border:none}
-.sval{font-family:'Source Code Pro',monospace;color:var(--gold);font-size:12px}
-.sval.g{color:var(--correct)}.sval.b{color:var(--wrong)}.sval.m{color:var(--muted)}
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar-wrap {
+    max-width: 600px;
+    margin: 14px auto 0;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border-gold);
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+    transition: width 0.4s ease;
+    border-radius: 4px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    max-width: 600px;
+    margin: 6px auto 0;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
 
-/* position leak bars */
-.lrow{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:11px}
-.lpos{width:34px;color:var(--muted)}
-.lbw{flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden}
-.lbf{height:100%;border-radius:3px;transition:width .4s}
-.lb-g{background:var(--correct)}.lb-b{background:var(--wrong)}
-.lpct{width:26px;text-align:right;color:var(--muted)}
+  /* ─── SCORE BADGE ─── */
+  .score-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    padding: 6px 14px;
+    text-align: center;
+  }
+  .score-badge .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+  .score-badge .score-lbl {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
 
-/* Sklansky groups */
-.skl-grp{margin-bottom:8px;background:rgba(255,255,255,.025);border:1px solid var(--gold-dim);border-radius:7px;overflow:hidden}
-.skl-hdr{display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:pointer}
-.skl-hdr:hover{background:rgba(201,168,76,.07)}
-.skl-badge{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Source Code Pro',monospace;flex-shrink:0}
-.g1{background:#5b21b6;color:#ede9fe}.g2{background:#1e3a8a;color:#bfdbfe}
-.g3{background:#065f46;color:#a7f3d0}.g4{background:#14532d;color:#bbf7d0}
-.g5{background:#78350f;color:#fde68a}.g6{background:#7c2d12;color:#fed7aa}
-.g7{background:#7f1d1d;color:#fecaca}.g8{background:#374151;color:#d1d5db}
-.skl-title{font-size:11px;font-weight:500;flex:1;color:var(--text)}
-.skl-arr{font-size:10px;color:var(--muted)}
-.skl-body{padding:7px 10px;display:none}
-.skl-body.open{display:block}
-.skl-rule{font-size:11px;color:var(--muted);line-height:1.55;margin-bottom:5px}
-.skl-hands{display:flex;flex-wrap:wrap;gap:3px}
-.skl-hand{font-family:'Source Code Pro',monospace;font-size:9px;background:rgba(255,255,255,0.06);border-radius:3px;padding:2px 4px;color:#b0c8b0}
+  /* ─── SETTINGS BADGE ─── */
+  .settings-btn {
+    position: absolute;
+    top: 22px;
+    left: 20px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: var(--gold);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif;
+    letter-spacing: 1px;
+    transition: background 0.2s;
+  }
+  .settings-btn:hover { background: rgba(0,0,0,0.5); }
 
-/* pos range table */
-.pos-tbl{width:100%}
-.pos-tbl td{font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.pos-tbl tr:last-child td{border:none}
-.pt-name{color:var(--gold-light);font-weight:500;width:52px}
-.pt-open{color:var(--correct)}
-.pt-call{color:var(--partial);font-size:10px}
+  /* ─── MAIN LAYOUT ─── */
+  .main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
 
-/* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;transition:all .15s}
-.btn-gold{background:var(--gold);color:#1a1a0a}.btn-gold:hover{background:var(--gold-light)}
-.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}.btn-outline:hover{background:rgba(201,168,76,.1)}
-.btn-sm{padding:6px 14px;font-size:12px}
+  /* ─── POSITION DISPLAY ─── */
+  .position-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .position-tag {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    padding: 6px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .position-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
 
-/* ── INTRO ── */
-.intro{max-width:640px;margin:0 auto;padding:10px 0}
-.icard{background:var(--felt);border:1px solid var(--gold-dim);border-radius:11px;padding:20px;margin-bottom:13px}
-.icard h2{font-family:'Playfair Display',serif;color:var(--gold);font-size:17px;margin-bottom:9px}
-.icard p,.icard li{font-size:13px;color:#b8ccb8;line-height:1.7}
-.icard ul{padding-left:17px;margin-top:5px}
-.icard li{margin-bottom:3px}
-.gtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
-.gtag{background:var(--felt-dark);border:1px solid var(--gold-dim);border-radius:5px;padding:4px 8px;font-size:11px}
-.gtag strong{color:var(--gold)}
-.set-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
-.set-row label{font-size:12px;color:var(--muted)}
-select{background:var(--felt-dark);border:1px solid var(--gold-dim);color:var(--text);border-radius:6px;padding:6px 10px;font-size:13px;cursor:pointer}
-.lt-bar{display:flex;gap:18px;flex-wrap:wrap;padding:10px 0}
-.lt-i{text-align:center}
-.lt-v{font-family:'Source Code Pro',monospace;font-size:19px;font-weight:600}
-.lt-v.g{color:var(--correct)}.lt-v.b{color:var(--wrong)}.lt-v.n{color:var(--muted)}
-.lt-l{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px}
+  /* ─── TABLE DIAGRAM ─── */
+  .table-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .poker-table-svg { width: 260px; height: 120px; }
 
-/* ── GAME ── */
-.game{max-width:600px;margin:0 auto}
-.prog-wrap{margin-bottom:13px}
-.prog-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px}
-.prog-bar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
-.prog-fill{height:100%;background:var(--gold);transition:width .5s}
+  /* ─── CARDS ─── */
+  .cards-row {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+  .playing-card {
+    width: 100px;
+    height: 140px;
+    background: var(--card-white);
+    border-radius: 10px;
+    border: 2px solid rgba(212,168,67,0.6);
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    animation: cardDeal 0.35s ease-out;
+  }
+  @keyframes cardDeal {
+    from { opacity: 0; transform: translateY(-20px) scale(0.9); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .card-rank-top {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .card-suit-top {
+    position: absolute;
+    top: 30px;
+    left: 11px;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .card-rank-bot {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    transform: rotate(180deg);
+  }
+  .card-suit-bot {
+    position: absolute;
+    bottom: 30px;
+    right: 11px;
+    font-size: 16px;
+    line-height: 1;
+    transform: rotate(180deg);
+  }
+  .card-center-suit {
+    font-size: 44px;
+    line-height: 1;
+  }
+  .red-card .card-rank-top,
+  .red-card .card-rank-bot,
+  .red-card .card-suit-top,
+  .red-card .card-suit-bot,
+  .red-card .card-center-suit { color: var(--red); }
+  .black-card .card-rank-top,
+  .black-card .card-rank-bot,
+  .black-card .card-suit-top,
+  .black-card .card-suit-bot,
+  .black-card .card-center-suit { color: var(--black); }
 
-/* ev strip */
-.ev-strip{display:flex;gap:0;background:var(--felt-dark);border:1px solid var(--gold-dim);border-radius:8px;margin-bottom:13px;overflow:hidden}
-.ev-cell{flex:1;text-align:center;padding:8px 6px;border-right:1px solid var(--gold-dim)}
-.ev-cell:last-child{border:none}
-.ev-val{font-family:'Source Code Pro',monospace;font-size:17px;font-weight:600}
-.ev-val.g{color:var(--correct)}.ev-val.b{color:var(--wrong)}.ev-val.n{color:var(--muted)}
-.ev-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:2px}
-.sdots{display:flex;gap:3px;justify-content:center;margin-top:4px;flex-wrap:wrap}
-.sd{width:9px;height:9px;border-radius:50%}
-.sd.c{background:var(--correct)}.sd.w{background:var(--wrong)}.sd.p{background:var(--partial)}.sd.n{background:rgba(255,255,255,.09)}
+  /* ─── SUITED BADGE ─── */
+  .suited-badge {
+    display: inline-block;
+    background: rgba(212,168,67,0.15);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 16px;
+  }
 
-/* table card area */
-.table-area{background:var(--felt);border:2px solid var(--gold-dim);border-radius:13px;padding:16px;margin-bottom:13px}
-.svg-wrap{max-width:280px;margin:0 auto 12px}
-.svg-wrap svg{width:100%;height:auto}
-.hand-row{display:flex;gap:12px;justify-content:center;margin:12px 0}
-.card{width:70px;height:98px;background:var(--card-bg);border:1.5px solid var(--card-border);border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 4px 10px rgba(0,0,0,.5);position:relative;font-family:'Source Code Pro',monospace}
-.card .cr{position:absolute;top:5px;left:6px;font-size:11px;font-weight:700;line-height:1}
-.card .cs{position:absolute;top:17px;left:6px;font-size:10px;line-height:1}
-.card .rk{font-size:28px;font-weight:700;line-height:1}
-.card .su{font-size:24px;line-height:1;margin-top:1px}
-.card.red .rk,.card.red .su,.card.red .cr,.card.red .cs{color:#c42020}
-.card.black .rk,.card.black .su,.card.black .cr,.card.black .cs{color:#1a1a1a}
+  /* ─── ACTION PANEL ─── */
+  .action-panel {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .action-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    text-align: center;
+  }
 
-.scen-box{background:var(--felt-dark);border:1px solid rgba(201,168,76,.18);border-radius:8px;padding:11px 14px;margin-bottom:11px}
-.scen-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:3px}
-.scen-txt{font-size:13px;line-height:1.55}
-.scen-txt strong{color:var(--gold-light)}
+  /* PLAY/FOLD BUTTONS */
+  .pf-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .btn-play, .btn-fold {
+    flex: 1;
+    padding: 14px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-play {
+    background: rgba(39,174,96,0.15);
+    border-color: #27ae60;
+    color: #2ecc71;
+  }
+  .btn-play:hover { background: rgba(39,174,96,0.3); transform: translateY(-1px); }
+  .btn-play.selected { background: #27ae60; color: #fff; }
 
-.act-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:7px}
-.act-grid{display:flex;flex-wrap:wrap;gap:5px}
-.abtn{background:var(--felt-dark);border:1px solid rgba(201,168,76,.28);color:var(--text);font-size:12px;padding:8px 14px;border-radius:7px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:all .15s}
-.abtn:hover{border-color:var(--gold);color:var(--gold)}
-.abtn.sel{background:rgba(201,168,76,.18);border-color:var(--gold);color:var(--gold)}
-.abtn:disabled{opacity:.35;cursor:not-allowed}
+  .btn-fold {
+    background: rgba(192,57,43,0.15);
+    border-color: var(--red);
+    color: var(--red-light);
+  }
+  .btn-fold:hover { background: rgba(192,57,43,0.3); transform: translateY(-1px); }
+  .btn-fold.selected { background: var(--red); color: #fff; }
 
-.res-box{border-radius:9px;padding:13px 15px;margin-top:10px;border:1px solid transparent;display:none}
-.res-box.show{display:block}
-.res-box.correct{background:rgba(58,158,90,.12);border-color:rgba(58,158,90,.4)}
-.res-box.wrong{background:rgba(204,51,51,.11);border-color:rgba(204,51,51,.38)}
-.res-box.partial{background:rgba(201,168,76,.09);border-color:rgba(201,168,76,.32)}
-.res-title{font-size:13px;font-weight:600;margin-bottom:5px}
-.res-box.correct .res-title{color:var(--correct)}.res-box.wrong .res-title{color:var(--wrong)}.res-box.partial .res-title{color:var(--partial)}
-.res-body{font-size:12px;color:#98b898;line-height:1.65}
-.res-body strong{color:var(--gold-light)}
+  /* BET SIZE (shown only when play is selected) */
+  .bet-section {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bet-section.visible { display: flex; }
+  .bet-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .bet-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn-bet {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border-gold);
+    background: rgba(0,0,0,0.3);
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 1px;
+  }
+  .btn-bet:hover { background: rgba(212,168,67,0.15); border-color: var(--gold); }
+  .btn-bet.selected { background: var(--gold-dark); border-color: var(--gold); color: var(--cream); }
 
-.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;margin-left:5px}
-.s5{background:rgba(58,158,90,.28);color:#80e898}
-.s4{background:rgba(100,200,130,.18);color:#90d8a8}
-.s3{background:rgba(201,168,76,.28);color:var(--gold-light)}
-.s2{background:rgba(200,100,40,.18);color:#e8a060}
-.s1{background:rgba(204,51,51,.18);color:#e06060}
+  /* SUBMIT */
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    margin-top: 16px;
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+    background: rgba(212,168,67,0.1);
+    color: var(--gold-light);
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: none;
+  }
+  .btn-submit:hover { background: rgba(212,168,67,0.25); transform: translateY(-1px); }
+  .btn-submit.visible { display: block; }
 
-.skl-inline{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.35);color:var(--gold);font-family:'Source Code Pro',monospace;margin-left:3px}
+  /* ─── RESULT PANEL ─── */
+  .result-panel {
+    display: none;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+  .result-panel.correct { background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.4); }
+  .result-panel.incorrect { background: rgba(192,57,43,0.12); border: 1px solid rgba(192,57,43,0.4); }
+  .result-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .result-panel.correct .result-header { color: #2ecc71; }
+  .result-panel.incorrect .result-header { color: var(--red-light); }
+  .result-panel.visible { display: block; }
+  .result-answer {
+    font-size: 13px;
+    color: var(--cream);
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
 
-.next-row{display:flex;justify-content:flex-end;margin-top:11px}
+  /* RATIONALE TOGGLE */
+  .rationale-toggle {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--gold);
+    cursor: pointer;
+    text-decoration: underline;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    font-family: 'IBM Plex Sans', sans-serif;
+    padding: 0;
+  }
+  .rationale-box {
+    display: none;
+    margin-top: 12px;
+    padding: 14px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    border-left: 3px solid var(--gold-dark);
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.85);
+  }
+  .rationale-box.open { display: block; }
+  .rationale-box strong { color: var(--gold-light); font-weight: 500; }
 
-/* ── RESULTS ── */
-.results{max-width:640px;margin:0 auto;padding:10px 0}
+  /* NEXT HAND BUTTON */
+  .btn-next {
+    width: 100%;
+    padding: 13px;
+    margin-top: 12px;
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+    background: var(--gold-dark);
+    color: var(--cream);
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-next:hover { background: var(--gold); color: var(--black); }
 
-/* fish tier badge */
-.fish-hero{text-align:center;padding:18px 0 10px}
-.fish-icon{font-size:52px;line-height:1;margin-bottom:6px}
-.fish-tier{font-family:'Playfair Display',serif;font-size:26px;color:var(--gold);margin-bottom:3px}
-.fish-score{font-size:32px;font-weight:700;color:var(--gold-light);font-family:'Source Code Pro',monospace}
-.fish-desc{font-size:13px;color:var(--muted);margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.55}
+  /* ─── FINAL SCORE SCREEN ─── */
+  .final-screen {
+    display: none;
+    text-align: center;
+    padding: 30px 20px;
+    animation: fadeIn 0.5s ease;
+  }
+  .final-screen.visible { display: block; }
+  .final-grade {
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .final-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .final-breakdown {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 0 auto 24px;
+    max-width: 420px;
+    text-align: left;
+  }
+  .final-breakdown h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 13px;
+  }
+  .breakdown-item:last-child { border-bottom: none; }
+  .breakdown-hand { font-family: 'IBM Plex Mono', monospace; color: var(--cream); }
+  .breakdown-pos { color: var(--text-muted); font-size: 11px; }
+  .breakdown-result { font-size: 12px; font-family: 'IBM Plex Mono', monospace; }
+  .breakdown-result.ok { color: #2ecc71; }
+  .breakdown-result.wrong { color: var(--red-light); }
 
-.r-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:14px 0}
-@media(max-width:480px){.r-grid{grid-template-columns:1fr}}
-.rcard{background:var(--felt);border:1px solid var(--gold-dim);border-radius:10px;padding:14px}
-.rcard h3{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:9px}
-.ritem{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px}
-.ritem:last-child{border:none}
-.rv{font-family:'Source Code Pro',monospace;font-size:11px}
-.rv.g{color:var(--correct)}.rv.b{color:var(--wrong)}.rv.n{color:var(--muted)}
+  .coach-note {
+    background: rgba(212,168,67,0.08);
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 10px;
+    padding: 16px 20px;
+    max-width: 500px;
+    margin: 0 auto 24px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.85);
+    text-align: left;
+  }
+  .coach-note strong { color: var(--gold-light); }
 
-.hh-wrap{margin-top:14px}
-.hh-wrap h3{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:9px}
-.hh-item{background:var(--felt-dark);border-radius:7px;padding:9px 11px;margin-bottom:6px;border-left:3px solid transparent;cursor:pointer}
-.hh-item:hover{background:rgba(255,255,255,.02)}
-.hh-item.hc{border-left-color:var(--correct)}.hh-item.hw{border-left-color:var(--wrong)}.hh-item.hp{border-left-color:var(--partial)}
-.hh-top{display:flex;justify-content:space-between;align-items:flex-start}
-.hh-cards{font-family:'Source Code Pro',monospace;font-size:13px;font-weight:600}
-.hh-meta{font-size:10px;color:var(--muted);margin-top:2px}
-.hh-rat{font-size:11px;color:#8aaa8a;line-height:1.6;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.05);display:none}
-.hh-item.ex .hh-rat{display:block}
-.r-actions{display:flex;gap:9px;justify-content:center;margin-top:18px;padding-bottom:18px}
+  .btn-restart {
+    background: var(--gold-dark);
+    border: 2px solid var(--gold);
+    color: var(--cream);
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-restart:hover { background: var(--gold); color: var(--black); }
 
-/* ═══════════════════════════════════
-   MOBILE — everything under 768px
-═══════════════════════════════════ */
-/* Hide mobile nav on desktop */
-#mobile-nav { display: none; }
-@media (max-width: 768px) {
-  #mobile-nav { display: flex !important; }
+  /* ─── SETTINGS MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #0d3019;
+    border: 1px solid var(--gold);
+    border-radius: 14px;
+    padding: 28px;
+    width: 90%;
+    max-width: 380px;
+  }
+  .modal-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--gold-light);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+  .setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .setting-row label {
+    font-size: 13px;
+    color: var(--cream);
+    letter-spacing: 0.5px;
+  }
+  .setting-row input[type=number] {
+    width: 70px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border-gold);
+    border-radius: 6px;
+    color: var(--gold-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    padding: 6px 10px;
+    text-align: center;
+  }
+  .btn-save {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+    background: var(--gold-dark);
+    color: var(--cream);
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .btn-save:hover { background: var(--gold); color: var(--black); }
 
-  /* Hide both sidebars by default on mobile */
-  #sb-left, #sb-right { width: 0 !important; opacity: 0 !important; overflow: hidden !important; border-width: 0 !important; }
-  #btn-stats, #btn-skl { display: none !important; }
+  /* ─── CHIP TRAY ─── */
+  .chip-tray {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+    opacity: 0.5;
+  }
+  .chip {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 3px dashed rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: rgba(255,255,255,0.5);
+  }
 
-  /* Topbar compact */
-  .topbar { padding: 8px 12px !important; }
-  .topbar-brand img { height: 28px !important; }
-  .topbar-brand div div:first-child { font-size: 15px !important; }
-  .topbar-brand div div:last-child { font-size: 9px !important; }
-  .tbtn { padding: 5px 9px !important; font-size: 11px !important; }
-
-  /* Center content full width */
-  .center { padding: 10px 12px 90px 12px !important; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-
-  /* Intro screen */
-  .intro { padding: 6px 0 80px 0 !important; }
-  .icard { padding: 14px !important; margin-bottom: 10px !important; }
-  .icard h2 { font-size: 15px !important; margin-bottom: 7px !important; }
-  .icard p, .icard li { font-size: 12px !important; line-height: 1.6 !important; }
-  .icard ul { padding-left: 14px !important; }
-  .gtags { gap: 4px !important; margin-top: 7px !important; }
-  .gtag { font-size: 10px !important; padding: 3px 6px !important; }
-  .set-row { gap: 7px !important; margin-top: 10px !important; }
-  .set-row label { font-size: 11px !important; }
-  select { font-size: 12px !important; padding: 5px 8px !important; }
-  .lt-bar { gap: 12px !important; padding: 6px 0 !important; }
-  .lt-v { font-size: 15px !important; }
-  .lt-l { font-size: 9px !important; }
-
-  /* Deal Me In button — big and always visible */
-  .btn-gold { font-size: 16px !important; padding: 14px 40px !important; }
-
-  /* Scoring table on intro */
-  .pill { font-size: 10px !important; padding: 2px 7px !important; }
-
-  /* Game screen */
-  .game { max-width: 100% !important; padding-bottom: 80px !important; }
-  .prog-labels span { font-size: 10px !important; }
-  .ev-strip { margin-bottom: 10px !important; }
-  .ev-cell { padding: 6px 4px !important; }
-  .ev-val { font-size: 14px !important; }
-  .ev-lbl { font-size: 8px !important; }
-  .sdots { gap: 3px !important; }
-  .sd { width: 8px !important; height: 8px !important; }
-
-  /* Table SVG smaller */
-  .svg-wrap { max-width: 220px !important; margin-bottom: 8px !important; }
-
-  /* Cards */
-  .hand-row { gap: 10px !important; margin: 10px 0 !important; }
-  .card { width: 62px !important; height: 88px !important; }
-  .card .rk { font-size: 24px !important; }
-  .card .su { font-size: 20px !important; }
-  .card .cr { font-size: 10px !important; top: 4px !important; left: 5px !important; }
-  .card .cs { font-size: 9px !important; top: 15px !important; left: 5px !important; }
-
-  /* Scenario box */
-  .scen-box { padding: 9px 11px !important; margin-bottom: 9px !important; }
-  .scen-lbl { font-size: 9px !important; }
-  .scen-txt { font-size: 12px !important; line-height: 1.5 !important; }
-
-  /* Action buttons — 2 per row, bigger tap targets */
-  .act-lbl { font-size: 9px !important; margin-bottom: 6px !important; }
-  .act-grid { gap: 6px !important; }
-  .abtn { font-size: 13px !important; padding: 12px 10px !important; flex: 1 1 calc(50% - 6px) !important; text-align: center !important; background: rgba(201,168,76,0.15) !important; border: 1.5px solid var(--gold) !important; color: var(--gold) !important; font-weight: 600 !important; }
-  .abtn:disabled { background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.15) !important; color: rgba(255,255,255,0.3) !important; }
-  .abtn.sel { background: var(--gold) !important; color: #1a1a0a !important; border-color: var(--gold) !important; }
-
-  /* Result box */
-  .res-box { padding: 10px 12px !important; }
-  .res-title { font-size: 12px !important; }
-  .res-body { font-size: 11px !important; line-height: 1.6 !important; }
-  .next-row { margin-top: 10px !important; margin-bottom: 20px !important; }
-  .btn-outline { font-size: 14px !important; padding: 13px 18px !important; width: 100% !important; text-align: center !important; background: var(--gold) !important; color: #1a1a0a !important; border-color: var(--gold) !important; font-weight: 700 !important; }
-
-  /* Table area padding */
-  .table-area { padding: 12px !important; margin-bottom: 10px !important; padding-bottom: 16px !important; }
-
-  /* Results screen */
-  .results { max-width: 100% !important; padding: 6px 0 80px 0 !important; }
-  .fish-hero { padding: 12px 0 6px !important; }
-  .fish-icon { font-size: 38px !important; }
-  .fish-tier { font-size: 20px !important; }
-  .fish-score { font-size: 26px !important; }
-  .fish-desc { font-size: 11px !important; }
-  .r-grid { gap: 9px !important; margin: 10px 0 !important; }
-  .rcard { padding: 11px !important; }
-  .rcard h3 { font-size: 9px !important; margin-bottom: 7px !important; }
-  .ritem { font-size: 11px !important; padding: 3px 0 !important; }
-  .rv { font-size: 10px !important; }
-  .hh-wrap h3 { font-size: 9px !important; }
-  .hh-item { padding: 8px 9px !important; margin-bottom: 5px !important; }
-  .hh-cards { font-size: 12px !important; }
-  .hh-meta { font-size: 9px !important; }
-  .hh-rat { font-size: 10px !important; line-height: 1.55 !important; }
-  .r-actions { gap: 8px !important; margin-top: 14px !important; }
-  .r-actions .btn-gold { width: 100% !important; padding: 14px !important; font-size: 15px !important; }
-  .r-actions .btn-outline { background: rgba(201,168,76,0.15) !important; color: var(--gold) !important; border: 1.5px solid var(--gold) !important; width: 100% !important; padding: 14px !important; font-size: 15px !important; font-weight: 600 !important; }
-
-  /* Hammerhead banner */
-  #r-hammerhead-banner { padding: 11px 14px !important; }
-}
-
-/* Very small phones (SE, older iPhones) */
-@media (max-width: 390px) {
-  .card { width: 56px !important; height: 80px !important; }
-  .card .rk { font-size: 20px !important; }
-  .card .su { font-size: 18px !important; }
-  .abtn { font-size: 11px !important; padding: 9px 6px !important; }
-  .icard h2 { font-size: 14px !important; }
-  .ev-val { font-size: 13px !important; }
-}
-
+  .hand-num-display {
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
 </style>
 </head>
 <body>
-<div class="shell">
 
-  <div class="topbar">
-    <div class="topbar-brand" style="display:flex;align-items:center;gap:12px">
-      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAB/AfQDASIAAhEBAxEB/8QAHQABAAIDAAMBAAAAAAAAAAAAAAYHBAUIAgMJAf/EAE4QAAEDAwIDBAMLCgQFAQkAAAECAwQABREGEgchMRNBUWEIFCIVGDI2VnF0gZGx0yM1QlJ2k5WhssQWYnLBJIKSotEzFyVTVFWz4fDx/8QAGwEBAAIDAQEAAAAAAAAAAAAAAAQFAQIDBgf/xAA9EQABAwICBQcKBQQDAAAAAAABAAIDBBEFIRIxQVFxBhRhgZGhsRMiMjM1UlNywdEVFpKy8AcjQuE0YoL/2gAMAwEAAhEDEQA/ANjwN4UW3iJbb9cLheJ8EwLoIbTcVtrbs9WYcydySc7nFfyqxPez6c+VF7/dx/w6/fQ1+K+rv2h/sotXrUGmponQsJaNQ2dC9LjGL18eITsZM4APcALnIXKon3s+nPlRe/3cf8OnvZ9OfKi9/u4/4dXtSu/NYfcHYq78bxH47v1FUT72fTnyovf7uP8Ah097Ppz5UXv93H/Dq9qU5rD7g7E/G8R+O79RVE+9n058qL3+7j/h097Ppz5UXv8Adx/w6valOaw+4OxPxvEfju/UVRPvZ9OfKi9/u4/4dPez6c+VF7/dx/w6valOaw+4OxPxvEfju/UVRPvZ9OfKi9/u4/4dY9x9G7T0a3yZCNT3oqaaUsAtsYJAJ/8Ah1f1Yd8/Mk76M5/Sac1h9wdifjeI/Hd+or5QcVTu1GwsgArhNKOBjmQaiVSzil8YIv0Bn7jUTrFJ6hvBbY97Rm+YpSlKkKpSlK/QCSABkmiL8pSlESlK2kXT1+lJ3x7NcHEHooR1YP14xWrntb6RsusUMkptG0k9AutXStlMsF8hoK5VonMoHMqUwoJ+3GK1tGua7MG6xJDJEbSNIPSLJSlK2XNKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpRF9I/Q1+K+rv2h/sotXrVFehr8V9XftD/ZRavWuFL6hnAeCtMc9p1Hzv8A3FK9cl9mMwt+Q6hpptJUta1AJSB1JJr2Vx36d+trmrU8DQ0OYtq3NREy5jbaiO1dWpW1K/EJSkEDplWe4Y7qrC6BncbuFUOaYj2tbWpwHBLbhcSD/qSCP51MdO3+yaigCfYrtDuUY8u1jPJcSD4Eg8jXAHDTgredccNL7raFcorDdsLqW4q0krfU22HFDPRPJQA8/DrWp4Da9uPD/iJbrnGkOiA+8hm4x0nKXmScH2e9Sc5T35GO801LcMLjYa19C9Zau03o+2+6OpbxFtscnCS8vClnwSnqo+QFQFr0juDzr4ZTqshROMqgvpT9pRiuNfSC1tL1zxTvFyclB6BHkLi29KFlTaWEKKUqT/qxvPmr5qxbxpGzx9HQZ8C5zZF7c2qkQ1xkpbwoZwhQUVKI5dUjOT9ejntZ6RsusFLNPfyTS62ZsL2X0hsl2tl7trNytE+NPhvDLb7DgWhQ8iKza4k9BvVtxtXEx/Rz77nqF1juLTHV0RIbTu3Adx2JWD44Gegrtut1wIINilYd8/Mk76M5/SazKw75+ZJ30Zz+k0WF8n+KXxgi/QGfuNROpZxS+MEX6Az9xqJ1HpPUN4K2x32jN8xSlKVIVSlebDq2X23mzhbagpJ8CDkV4VudExTM1Vb2QttOHgs9oMghPtEY8SBWr3BrSTsUikhdPOyJmtxAHWVt+K1sag6gRJYQEIlt71ADA3g4V9vI/OTUPqw+M0iK45b46HUKkNbytAPNIVtxn7Kryo9E4ugaSrnlVDHDi8zYrWvfLeQCe+6VavCterYSWN8UzbI+QApMltZYz3gbsgeKf9+tVoISoEpCgDkg9D5cqvLhSxBXZfdCNaE251z2FdnJUtLg67sFRI+vn586j4o/RhzF7/zePqpvIynM2IAteWkC+Rtfj5pBHQSOgr08Q7lfbApM+3T2S0ok+rudSB15Kzu/5Skjrg9a1tm/wxxDiuNzILcC8Np3LUx7KlD9cfrDyOSP51uLpo2Tfry6/fLi57nodJjxWVHJGeqic7e4YT4dxrNjaHsKf+JsbC4cuKcoksOKWWyOR3AkgjuIPmOVVLZoWRgA+fvH13r28tBX1FW97mAwH/B5uTvLcjondmOrWqe1lpW46ZmBEgdtGcJ7GQkeyvyPgfL760FdPNMuPw+xuTUZ0kYWEjKF+eD0+bn89V9rrhvHfZcn6ebDL6RuVFB9hf8Ap8D5dPmqdS4s11mS5HfsXm8a5ESxB09Dm3Xon0hw3+PFVFSv1aVIWpC0lKknBBGCD4V+VdL58lKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIvpH6GvxX1d+0P8AZRavWqK9DX4r6u/aH+yi1etcKX1DOA8FaY57TqPnf+4pXLfpF8Bdb6+4oS9SWRy2CE7HZbQH3ylWUIAPLB766kpXdVao3hVpG5cJPR61RC1U5F7RsTJqjHc3pKCwkAZwOZKSMfNXD+mEJcvsXdjalW457sAkfzrov0wuNDF77bh7ph9LsBp0e6ctCsh5aTkNJ8UggEnvIA7jmF+iTw3max4iRb9KYKbFY3kyZDqxhLjqfabbHjzAUe7A59RnV7dJpbvUqkn5vOyYi+iQbb7G9lTs1lxu4Pxy2pLiXVIKMcwQcYxVm2eztXC2woTiEdslouJYLuztFpA6c8lQ7gDnyrXzoCHNeXu8OdkuNKmSnYTwUCCS6raoDvyDkH5quLgCYCtXz4Sno8eS/ZJMe3uOnCUyFONNoA/zZVgY58yO+qiqkE8zIWnr6l7rBqV2G4fPiEzQSQPNI2Fw8b9ltepRewJXpW/2PXdmDL0plTgacdTg7wktusuAd+1wcxnktJBrs7ReoYWqtLwb/byewlt7thIJbWCUrQcd6VApPmK4jbj3OAxOs9w2J9WnLfQNxJUVhKFK8uTbQx9ldL+ig+89w3mJWoKaauzyGcHkE9m0Vf8AeV0w6VwldFe4tfhvCxytoYn0Uddazy4tOzSGZaT02AN9t+Ct2sO+fmSd9Gc/pNZlYd8/Mk76M5/SauV88Xyf4pfGCL9AZ+41E6lnFL4wRfoDP3GonUek9Q3grbHfaM3zFKUpUhVKVk2ya9b5iJkcgPNg9mo/okjGf51jUrBAIsVvG90bg9psRqXm84486p11anHFnKlKOST4k14UpWVqSSblfqEqWoIQkqUo4AAySavXQkGbb7OzY/WMOMAOzHEpH5IrGQynlzVjmSc4z5jGh0LYoWm9OL1XcexmKcYQ7Hb7HK21HoEk/pKJA6VLtIWV+Cwudc3VO3CU4p9xOfYZUvmUpHTOMDPXljoBVBiNW2RpaNQPaf8AS+nclMElpJGyv9J4uRf0W7L22uIy6AdWyX6btfuxczbW7hAg9kwX3ZE+SGWWmwQnctavEqAA5k8/A4xdb6QvuktStzbfMNm1HHbS/CucJzKH0H4OSOTjSsYIUDyyCOorO4d8PYHEfiXFs01kCIzDVJuT6R+U9XSsBLKFfoFxa+ahg7Uqwc4IsPj5YLLpW12y22tpMO3wZD7cZneSmOx2TC9uVEkJ3lxQyeW5WOQ5R46fydNzhhIcO/Oys6rFBU4wcKnDXRuB2Zg6N9d9fAC1+grTaeetnF3hdO1TDtrFp1pp9Rav8GOna28UjJdSkchuAUoY70qTzwDUDrI9FPUTLHpOKhw0vm2antTrC+0ZUht5xtHaBScgZ9ltXP8AzHxrzvUT1C8zYP8A8tIcZ/6VEf7VriMQsyUC2lrHSuvJOsk056F79MRnzTvab92QI47lTXGnTaGHUahhoCUuqCJSQOW7uX9fQ+ePGqyrpfUVuRdrHNtywPy7KkpJ7lfon6jg1zSoFJIIII5EHuq0wmoMsWg7W3wXjeXGFto60TRizZM+sa+24PElflKUq1XikpSsm2QJdymIhwWFPvrztQnyGScnkB50JsstaXENaLkrGpUzZ4dXk25UuRIhx1hBWGVLyrpn2j8Ed3fy78VG7Ha5F2lqZZBCGmy685tyG0Dqo/aB85Fc2yscCWnUpk+G1dO5jZYy0u1AixPUsClSTSekZmoWZEhp9EdhlYbC3EE71dSBjlyBBPPvHjXlqzR02wRETFPtyY6l7FKQkgoPdkeB/wD3uzgzRh+hfNbtwqsdS87EZ8nv2bvFRmlK3OptPyrAYaJjiC7IZDqkJBBaPeg5HUdDjvz5E9CQDZQmxPc0uAyGvoWmpW60jp2VqOa7HYebYQy32jjjgJHUAAY6qOc45cgfCtQ+0th5bLqdq21FKh4EVgOBOjfNbOgkbGJS06JuAdhI1+K8KVmWW3P3a6xrdG29q+vaCo4CR1JPkBk/VU2/wJAc1R7nx5MxyBEZQqc+QkL3q3bUpGMJ3BOQPaxg8zWr5mMNnFSaTDamrbpQtuLhvWdnYCTuGZVe0rzeCQ8sISpKQo4CjkgefIc/qrf6b00blY7neJDxajREFLQT1cdwDjySAQSfMAd5GznBouVGhhfM/QYLnPuFz2BR2lZFthv3G4x4EVKVPyHUtNhSgkblHAyTyA59T0rN1XZzYb29bDLbldlg9ohJSDkZ6Hn/APjHzVm4vZYETywyW80G1+k3t4FaqlKVlc0pSlESlKURKUpREpSlESlKURKUpREpSlESlKURfSP0Nfivq79of7KLV61RXoa/FfV37Q/2UWr1rhS+oZwHgrTHPadR87/3FKoT0yOJ0jRmj2dN2WSpi83tKgp1BwtiMOS1DwKvgg/6iOYFX3XA3pnS7hcePNzYcS44zAixo8fCThKC0lw/9ziq7qsC0no9cJJ/FPUjqFvKiWSCUqnyh8LnnDaM/pHB59AOZ7ge2tTMW3hrwjmxtK2kMtxWBHhRmEFSlPOqS0gnqVErWknqTXDXDjivxA4f2R6z6ZebjxHpBkrS5ECyVlKUk5PkkVPdFekJxZuesrJbZs5hUWXcY7DwEFIyhTiUq593ImhWwNiCc1W7VwhM6vFmva1WiFBcXFddDfauMqTlBOAFZwcnA64xuGciw7NDnWfVAMCAZV0jPIlWIPoATJUpSHWV4yeS0kgDPwiO8VpfSk4Y3vSHEa63luI/Isl3lOS48pKMpQpwla2lY6EKJxnqMHxqNtcTr/K9wGLghlXuLFTDjyWEFEnskHLYUrPMo57cAHmagyUoYA6MZt7969JR41JUSSQ1b/MlFjuaf8SBuBte2wK2G9VWHWtui3LUzL0C7TJaYKHoTBdXJdbTHS4oNDG4qU66skYACUAZUTm//Rz05dtOaSnNXS3vWtMib2jEJ1SStvDaELWrHetxK1DmRt24wKpbRtyuclVil6N0lJZu7VxExtRt6iwQ60pl4hRI7NCk9nyxgbCcmut67RNiLi9osTrysq2ukrI4m000mk0ahcOHVa+W5Kw75+ZJ30Zz+k1mVh3z8yTvozn9JqQqpfJ/il8YIv0Bn7jUTqWcUvjBF+gM/caidR6T1DeCtsd9ozfMUpSlSFUpSlKIlSPhm80zri2l9KVNrcLZCgCCVJIH8yKz+Fun5F1vKJhVEERheHUPpC+2H6SQg9eR692RU91VpzSERxqU9HNqdSoLRKikJDageRKB3Z79vLxFVtXWRhxgOdxsXrcEwCqfGzEWkAMcDZ2VwCDr+9h0rZ6r/wCL1Bp61K5tuSVynB4hpOUg+W5Q+ypLUGiXhFy1zaQ80Y8tluU2tokEKQQlTa0nvSpIJyMjl9sni3AvainW7KdseOw4B35WXM/ySmvPTRua1o3C/ef9L6nh9XFJLLIDfSeAOpgNurPLerv9EMtf471glQV2vuZbi2eeAntZe7y67Psr1emVZJs613lcXec26OtpsE5WomQh3A+qOk+axUU9GXUSbZ6SK7G+6lLV204pLSTjm826pwf9iXPsq59Q3qwcStFTdS2dxb9otsuTbn5KRuD8b2A68gfqodQ26O9QY5fCr0VOwvomga7L5XilQ2DlBI9/o6RB4EWPcSuN+F/E6AxxG0QyqzsMOxdSsvOXMuqC0RnUJZUwW8YATuWrdnnVl615ayvYP/1CR/8AcVUZ1joaAzcbhb59six7mgqQqS20N6V/ouJV39yge8YqTXSQb5ARqCSthi7OYTdY28Dc/wBFPtfrIcPtY+EklQIxgmoq52TxBrBYt2L3mDUFTQ175qh/lBKMnC9tdwDrtcHLZsC1Fc06naSxqW6MJ+C3MeQPmCyK6G1BdY1ltEi5SlYbZTkJzzWruSPMmubp0hyZNflvEFx9xTi8eKjk/fUnBGOu52xU39Q54y2GG/nZnq1d/wBF6aUpV+vmCVPeDDD3utPlIKQ2mOGV5RnO5QUMHHL4HkfqzUCq2eDISiwPuOoUtozDlLYCVkBKcgKP8s8h9ZxFrHaMLunLtXoOS0HlcUiJFw27v0gnxAU71dpy6WTR0K6yZsOUi+W1ydBAKUFCDnCFpzkgAoyvkCSR3ZNXaYbZtnC673NPaesTAtpZ3Hbs5ISMA9dylHJ8unfcnGLVytS6eTbm+0j2i3W0xYbLm3LZLYSo5AJAJHIZOAAO6qn18hNm4fW21tMerOKDSH2yrJ3hGXTnzc5/XUGMsJLY9RcO7WvXVkdU2NtRX+sjieeBe7RbfpF+5bHTDn+H+FzE5cdCHFIclE7yrfuVtSSnkAcJT06jGT3D369eaf0JKfWyDvbbUhJUCUKKk9/fjnX7cbHMc0rbdPuJWj22mpYKsltCQVKGfIpAH1Vp+Mcthq2xLdHZQylbvaBptR2toAISMEkkcyBkn4NaNDZZwRr0j2BS5nTUGESRuFoxC0Z7Xvve3C+ajHDCxi9amSp4H1SC2ZT527gdpAQkjwUspB8iT3VIONjZcVbpqy6t1anErWeYPwTzPj1rb8M4Dlo0eJb6UoXc1h5A3EFaUlTbaSDyyVb8eO8VreNAzAtp/VdWPtA/8V3dMX1jQNQuO7NU8GGsp+TE0jvTfou4N0rN7cz1rccJYSIugEy8bXp891Shj4TTaUJbP/Up4VXnEiIqJq+YShQQ+Q8kn9LcOePryKtSJKTYtKabt09tERSYiEJStwHAc3yConxPaHkeYyE9RioZxmhqD0CehlIQoKaccCee7qkE/NnHzGtYZDzsk6jcdi64lRx/lqONp8+LRcRu07nPt7l4cD43/vu43NSARGhqabWf0XHTt8O9vtfCphHDMSDqC9dttMmQtJS5uA2sNhCVEgjkVl0cuYx16Y1nCwRrbw3mXEupDsmctTwSdxShltPZkgdObrv2A9K9wg3G5cMGLfnEt2MFoz7Od7vakk+e8nPny7hWKlwMpucsh9SumA0746GMRtu60stttwNBo67mypwkkknqatu/lVi4SQ7ashLwjBK07cZceUVqz4KSlQSf9ArS6Z4eTEXyK9e1RV29l0LfaQ4oqeSMHYOXLd0z3cz4ZyON09Tz0KOp38o4pchxCQAOZwDgee7H11IllZNIyNhvnc9SpsPw2pw2hqaypjLTo6Dbixu42Jz3DxXo4M2dxcuVqFxCg1HBjMKyAC6tOFfPhBIPhvSfCtdxeaSjU7biU47SMkqOBzIJHd5Y6/8AirOskBOn9P22wubUvNBRf2dFyF+0vPPqkAIyOobFVpxhSsajjqLYSgxhhWB7R3Kz/tXGKbylYTstZWdfhjaLkw0EeeXBx6CRlfg0jrUKpSlWq+dpSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoi+kfoa/FfV37Q/2UWr1qivQ1+K+rv2h/sotWFxqv0/TnDqfcLVMaiXEuMsxnHNuApbqQfhez8HcefIYyajU7g2naTuHgrrFIXT4xNEzW6Rw7XFSLVDzsfTN0kMTmLe61DeW3LfGW2FBBIcV/lSeZ8hXJ8/idrm16K1P61rSQ7qCHao8uOtEaK/FkoXPab9aYeQnkChWzs1J5ZJzkECRao4p6jn6UgNW+7vNzX0xY6ldgh1uS8iO45KSNqCN5U8y2UHluSkDGVVIdR3XS8XUGuLRYtNWJUaFbGoaY8a2R1iTPceSEFQ2+1sWpGUnPNBOMigqmfztXV3J2rbo6je/i1t8xtLuORWv1zq7VNj4aaVkf4lmW676hu8KMuRLVEdDMdTZU46nY2EpSSoZCskYHTnUVj8TNb3ThppS/NavaTJbjzzeYcYRkTng0XSmS2hadq0toSlRQNucHxyJhqOdpaC5w8uNssmnrYxJMWZcZKbbHGwlxHslQSC2rCJPtYAOxQHPGPbqm/wCh4sQyGLBYJdnkagYg22MLaxtDTaW3Jb7QKcK37uz+oHPcNjUszXJuBVZDTbXfuNuG88BdQPXXFbWbjN4ctesH3IVu0vBnxV+oMt+tuuvx21qdbUlXVLqwUg4yKieu9c33T+odRu2q0WeKG2rYY0xizRQqFIdZQ6oA9nnCwHuucEDGKu66Xq1QrZEvWoNN2G9hMu722NHctzO5n1Jx9McNnadqVdiEEdNziSMYwZHqyziwtNOXmHY7mdQBTMxT1rZKG5jcdbjBA25W0OyWgBZUobk4UOdd1TKFva41RbuM6LfdNcKcssvUKIURUBqO+w1zOYUhGA42s+yO0ycc+WM46DhXCPNkPNxlpdSztC1pUCMqSFAfYQc1VUW2Q77bbhq1tnT5fiWdK3JjVsaMj3RDRccV2mMhKQUDbzJJIzy558y9XqDpSbdLVd4S+wjxu2QlkHsH1Fn2Tz72Vg47iAckGtTe66NDNAk61aNYd8/Mk76M5/Sa0uibvMn3TUlqmOpkiz3FEVqSEgF1CozL3tY5bgXSDjA5DlW6vn5knfRnP6TWy5L5P8UvjBF+gM/caidSzil8YIv0Bn7jUTqPSeobwVtjvtGb5ilKUqQqlKUrJtcJ+5XGPAjJ3PPuBtHzk9T5VgkAXK2Yxz3BrRclWdwihyoFievEmWmHBU5nahpJcfxyAUSCcZ5BKcEk+fPYakthufaT77dFWaAsnYh13a6odw2pISDjuO8/N0Hp1PqG06LtkWx2tluXcIyBtK+aWlEYK1eKj3DuB7hyNV3O5TrtNVJuUpch5fLe4ThHPuA6DyA+qqWGCSokM/og6jbO382lfQ6/E6XCqRmHkeUc0ecLnRDttz0HU1tuk3Vj6cl6WgzmIMG7y7y2nd2MV2EVrC+uWl4Ts789x51v7FMec4jSA7b5EBMm1pWht8p3K2OYBwkkDkTy68qufgRw5svEeHE/xM7pGZYNHSFwLbP08gw3rlIUltztHikJO1KSAOSSpW4nPVVZcVU2C08Z47Wn7szcocCe5bHXG15wXGwpCCe/arcknoSk+FKykLLkZgg59OvZbWsYDjTKjRY4BhY5pAGogkNOZJPmg3sDa3WvejScjVGtrXAsUp2Hqi4vswoMpDhAjRdklUx0gfCw3tHX9PA5kEdFejHfNN6Y4MXuHEkPOWvT2o5trY7ZSS88S+kNA4wN7hdRjkBlWO7NV3wMuES1cWbLLlNoIfLkEOEZKC8AE48ytLafmJrny0X7WOn9Q6msEIPybTa9Rt3q7g9UGJIUncSTgblLSCOqlJQB5ysLkD6YDdkqXlnSugxZ7jqfZw7LHvBXZHF/h9HjpStKkMwUJxBkpSpaoaBkll5Iyox05G1xIJaBwobAFJpm8WG7WlKHJsJxMdwbmZKMLYeSeikOJylY8wTW84U6+f4helRqDiNLnvJ0lpyI7BtaUlRS52p7Nlttsc1uPbXHNoBUSAO5OLJut70xZ+GN+4laktUzRrjdwlx2olpuKo7kpaHlNIS4hpXYuPKUhWSQsDmckAmtavDI5zpA2K64JywqsNj8i8abBqBNiOB/0uZr9o+/65uLdpskKRIUnJ3FBKWvFSUDmpX+ZWEpHTnzrn+WwuNKdjOFJW0tSFbTkZBwcHvrvji1xH0hoLWl60dOuc+6ymdNSJyBPnq9WM0IKmYrjKAlC96RkhYPVI764R1FPj3S/T7lFt7NtZlyFvIiMkltgKUTsRnntGcAdwx1qRSUxp26JN1WY5i7MUm8sI9E8b/Qffpta2BSlKlqjSrmskoaf4dxZchpbqIzAWpLe3OFucj15jcsc+fWqlscBy63qDbGjhyXIbYSc9CtQSOvz1PuLVwTFgRLDGTsbUErOHSSEJyAkjv54OSP0eXfUOqYJXMjOo59i9RyeqXYfBU1zPSa0NbxcfoAVgw9V3C/aztscPeqW9chKFs7VKCmzyWF7SCoFORyI5Hu61u9epdvGs7DbFsuSkrf7V5AUfygKgXM45jCU5zjoSe6ovwmiMStTqW8h1Rjxy60UJyAvcke0e4YJ+vA76ltoZE/itPmomJbFuglSQk4K1HaypvzOHFqx4D565PDY5QGjJrSVYUjp66gc6Zxc+olYy53DPqAJ4KRXqexZbM9OcbJajpACE+ZCQPtIqooiJ2t9ax463A25NeCCojKWGhzUr/ShIKj5A1aGvG0vaPuScBQDW7ke9Kgf9qiHBu1KXKl3p1B7JpPq7JIGCtWCognwT4frj649CWxwvlOsK75XRz1+KU2HMd/bcAbDibnqaMlNnIzzF5ssKCy63ZYr6HZLgUjcptByEbeXM4BJGB4VpOJNvcuz9htbS0oXMuCI6SpWACshIJ8ufWsqDrezTb0zaY7M9ch+QmO2Q2goUtSgkYIX0yfCs65QTM1jpxak5ajqkyCT8FKm2t6M/8AMkAVyiMjJWGQWtc8clPxFlDV4fUtopdMuMbbbGgOAaBkMte9RrireXbeq0xIjy0So7qZaVZ3bSjkg5PM88/ZUo4wwmrxZZMu2gvNPts3OOABkIcQHdvIdQlZBwBzGKq7idN9c1a+kAbY6EspwOuOZz9ZNWRw5uT120Hb0PoKk24uQNxBO5O4ujJ6dHSnHcECpEjDHTsk2g37VS0dSyuxqqoifMkaWD/wMvAlYV4aeHD2w2KPvjOSERoSQlJCtzq96weY57lryD81bbWmo7bp9XaFh0oeWv1ZttGEgJ6DJPLqPGsWYv17iHZbepSUtxG3rgpS1H4aEKLfXqd4AHmag/GGUpzULEUOqKGI4JR3JUokk/WNtc2RidzQ7bdx+imVVY/CYKiWnOcfk4mnpAu7I8VONH6hc1GZrjFtU1EhlCHHy7kb17ilOMA89iz8yfqrSuW9WoeLakL2qiWiOl94kZACMEJOc53OrSn/AJvLNZfB6GlnSLsnG12ZNUDnqUNpSEn5ty3B9VZujGw3a52oXH8+68hx4pSBhLLa1IRknvyFk9BjaT5YIZBJIWDULDiV0a+oxeho2Vjrl7y92QHmMvu35dqyn0XOTqth5cZAgRmnCHlue0txYHMAHORzHtDGM9+KgvGUYu8I7sksHljoN3/9qZWPVtqvV1Vbrc1OccSFK3lpIRtT1VndkD6u8VCuMboVfIjQBBRHycpxnKj0PeOX30pGvE7Q8WsFtyklo5MGnkppdPSkBJvtyyGrIAC2tQalKVdr5KlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiL6R+hr8V9XftD/ZRan3ESC1ftVaS09LiokQDKeuMpK87VhhopQgjBSoFbqSQrlhJqA+hr8V9XftD/AGUWr1qNTt0qdg6ArnFpjDitQ8a9N/eSL9WtcyrKm9eWnVLWnTMgC4SpoYUwQ46/JVI9UASQRu2R2VA8iCtHIda3Nj0ddrDxbsdjuc9y5sz2W7hLf29n2TrTrsjs0AcikvBKj05EjAyK6BpQUrb3vtuu7+UM7mFgaAC3R7yQb7CCScvoFRWnuHbrut3Y+oI86ZaI02cphl9H5D1ZsAx0glIJO6Y8euCUHHJOKjFg4banvemYcub7oWhEGYxFbgqglLj6HpSHHnVIGBsT2iSDzyGOYTjl05SnNWIOUdUCXZXNu69+s3tfcqmsuiPdThxqSMbUIV9mTrouK/JZKF+3NcfYOSM7D+RJx4c+Yr3a6uS9TRba37mzoibY3Ius9uQypCkrbjuNpaRkYcPaOglScpAR19pObTqOP6RtjRny7dGYRPlMPNFT4LjSu0UVnej9IFRyR9VdnFw9EKmgbE4/3CR1eO7vVWW29WuxWGazFOLXetMo3BtOG2Li1H7NTZxy3uN9ny7uxyfhCsnUd6tD2kndLWy2OrmTLbFfmN+rFJfWOxSEBJwVEtpUokAja351tpPCmY8xHfFxiJuSDJ7d4tna/wBsx2ROBgI2jG1IGMcq9n/sof8AW2Um8NmIkRiohkhzczEMcY54wc7vLpUbytR7iuzQ4Tb/AJB1HZtvw3Z9OrIracJpMCLMvun7UI71tZlqnQpMYhSFNyDvU2sjo4hZWADz2dn1wamd8/Mk76M5/SaifC7REvR65pk3NMtL7TDSEJSfZDSCndknPP8AVHId1Sy+fmSd9Gc/pNSInPcwF4sVUV0UEU5bTv0mZWPVn3r5P8UvjBF+gM/caidSzil8YIv0Bn7jUTrnSeobwUvHfaM3zFKUpUhVKVsLDdX7NOM6KlPrKW1IaWrn2ZUMbsd5wT9ta+lYc0OFjqXSKV8Tw9hsRqK83nHHnVuurU44tRUpSjkqJ6kmvClKytCSTcrKtc+VbZ8abFWgOx325DaXG0uNlaDlJUhQKVDyUCCCQeRr9Nxlm4ruAcCH3Hu3V2aAhO/duyEpAAGegAAHdWJSsEX1o1xabjWunLJcUXK1xLnEcKA82lxCknmg/wDkH+Yqc8VLDaE+i1rvV1kZ7S66rvMWRdQ237aHfWGtzPLnt7UqcT49qPGufODGqEoH+HJrgAJKoalHvPMo/wBx9flXR/B7VMGyXg2m/NNyLDcH2VyEOc0svNLC2nsf5VJTnxAHXAFefpn8xqTE/wBE/wAC+pYtAOUeER1kGcrNY2/9h9R0cVWHob6NlnX2uok64J09fbFaX47cp1oOqtr5c7J55ICgN6EBxIOcDd39DT+s9f6kv/uLb58srtVhbQ3bISmtjQSAD2i0ZO5bmApSiSSVHBxgV2fbuFKNJ8S9SX64XR1mPxKn3OzpcjqSUxWpTan2XcnP5RS0LAzyypAxzrmT0stJO2vj/crPZrS6xAMKGi2NhOAthiK2ySnPUBTLic95Sa9ASALlfLmsc5wa0XJXv03wgvnEpnWur7rxBsLs21xW7nLe9ZEj1hTrJeIUtJAb242HqEqBTj2apKlKytUpSlEUp4WwmJusGPWd5aYacewnPNQSQnmAcDcUk5wCBjqRXr4k3Fc/VEhspQlEU9ikBIBOOpJ7zmtNaLlNtM1MyA8WnQMZwCCPAg9RyrGfdW88t51RU4tRUpR6knqa5eTPldPosrLnjBh/NWjMv0idlgLAd5Vm8GQ3GsF8nvSVtILzKdm07SlCXFLUTjuynlnv+athwoUwu1aglvLbXNl3JBJHPYhCXCfa6YUXR3/oVVsW73KLbnLfHmPNRnCSttKyArIAPLzAAPzV74+oLpGtItcaQWI/PcEE5Xk5588fZjI65rhLTOfp2PpW7ArbDseipeahzCRFpk9LnauoZd6sCNKauWhb8G3PywcfcdCwU4yoqB+sA/XkV7LzKe0hw4jWkHsJqtw2EglLq8dorkCCQAE58AnnyqsodynQ2FsRpTrbS87kBRwc4zy6c8D7BXjdLhMucxcuc+t55ZySo9PIDuHkKc0ztfK90PKN3kw7R/uBhYHX1XJJI6bZDtXu03Net2o7bcY76WH4stp5t1QyEKSsKCjnPQjNXm+HmdWLhLbZWGYq0hZQQUrLgBKc4KThBHMZwpQxzrnytyrVGoDJekC6SUuPgB4pXjtMAAFXj0/mfE1tU05mtY6r96jYHjTcMLg5tw4tP6SSO+yw75LTPvMyagKCHn1rSFdQCeWfPFT3ghMkOKu1oEtttjskzeycXgLUhXZ4Ty5rw4DjIyEnqcCq1rKtVwm2uambb5C48hKVJS4jqApJSr7QSK6yRB8ZZ0Kvoq99LWMq9ZDr8c8x1q5dDPIuF71ffkkKaSiNbGTnkEqUXCoH5446fr+dVJqucm5aimzW9/ZuOnZuVkhI5D7q9Ma73ONBcgx50hmM46HVtNuqSgqxjJSDg8vKsGtIoNB+l0ABS67GHVdMISLEvc9x3l32CuptuRa+GFvjR2l+tKt6NgURkqkLK0kc/B1OO+tTxGujNk0+1p63qSlTjQaO080tDkfPnjvx1qHnXGpVT4Uxc9Li4S0rYQtlBbSUtpbGUY2kbUJ5EYzk4yo50lynTLlLMqdIW+8UpSVqPPCQAB9QArk2j8/Scdt/t2Kxl5TEUoghaQdBrL31D/K3zG3YpZwTQt7iHFjoOO1iywRnG7EZxQH2pFY3FWR22rXEBWQy0hA9rOOWT83M9KjdtmyLdcI8+IsIkR3EutqKQoBQORkEEEeRBB76/bpNkXK4yLhLUlT8hwuOFKAhOSc8kgAJHgAAAOQruYryiTosqZuIubh7qK2RcHX4C1ljUpSuyrUpSlESlKURKUpREpSlESlKURKUpREpSlESlKURfSP0Nfivq79of7KLV61RXoa/FfV37Q/2UWr1rhS+oZwHgrTHPadR87/3FKUpXdVajPE/Wlq0BoyZqW7b1tMAJaaQPaedV8BA+c9/cMmou7xksjuidP6qtlvnTYt4fDJQlshTBBw4lXdvByAn9LGQcc6sO72y3XeCuDdIUebFWQVNPthaSQcg4PeDzB7q8IdntMO3sW+JbYjESOsLZZQykIbUDkKAxyOeeeua0kDi0hpsVIpZIY5Q6Zuk3aL2v1qu79xgtdq40WjQLhipZmMASHnVqQ6zIcALLezb+kCn/q54xg7LQutNRX3Wl0sNx02IDFtCg8/2pOFFX5MdOeU8+XhmpXJ03p+TfG75IstvdubWNktcdJdSR0O7GcjuPd3VtEpSlSlBIBUcqIHWsPY4kEG1u9bwTxRxyNfGHFwyNz5p35a8t/Qv2lKV0URKw75+ZJ30Zz+k1mVh3z8yTvozn9Joi+T/ABS+MEX6Az9xqJ1LOKXxgi/QGfuNROo9J6hvBW2O+0ZvmKUpSpCqUpSlESlKURKUpRF5NrW24lxtSkLSQUqScEEd4q29DcSYz7LcDULnYvpG1Moj2F/6v1T59PmqoqVGqaWOobovVthGNVWFS+UgOR1g6j/N67O0xxDucSxtWxXqN8syXW347ModoGHEKC0OMuJOUKSoAg8wCMgc61XFvXzd+uw1VqFEKC6xDEVCWiclCVKXtGealEqPTGcDlXJbEmRHz2D7rWeuxZTn7K9alKUoqUSonmSTzNQvw6Us8m6W7d1vqvQHlVRsm53FRgTZ56Rtc7bWtfv6V+uqC3VLCQkKUSAO6vGlKtl4km6UpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoi+kfoa/FfV37Q/2UWr1rjXhHxYmcOoN4gxrHDujVxuAmhxyatlSPyDTW3AaVn/ANLOc99Tb3zVz+Rlv/izn4FV1PWQtha0uzAHgvWYtgGIzV88kcRLXPcQbjUSbbV0pSua/fNXP5GW/wDizn4FPfNXP5GW/wDizn4FdufQe8q/8tYp8E9o+66UpXNfvmrn8jLf/FnPwKe+aufyMt/8Wc/Apz6D3k/LWKfBPaPuulKVzX75q5/Iy3/xZz8Cnvmrn8jLf/FnPwKc+g95Py1inwT2j7rpSlc1++aufyMt/wDFnPwKe+aufyMt/wDFnPwKc+g95Py1inwT2j7rpSsO+fmSd9Gc/pNc7++aufyMt/8AFnPwK9M70k7nJhPxv8HW9PatqRu91XDjIxn/ANCnPoPeT8tYp8E9o+64t4pfGCL9AZ+41E6lvFYBOpWWwoK2Q2kEjxGRUSrek9Q3guOPe0ZvmKUpSpCqUpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpRF//Z" alt="Piranha Poker League" style="height:38px;width:auto;object-fit:contain;flex-shrink:0">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--gold);line-height:1.1">Fold or Feed</div>
-        <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:1px">Tournament · 50BB</div>
-      </div>
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-box">
+    <h2>Session Settings</h2>
+    <div class="setting-row">
+      <label>Hands per session</label>
+      <input type="number" id="handsInput" min="5" max="50" value="10">
     </div>
-    <div class="topbar-controls">
-      <button class="tbtn" id="btn-stats" onclick="toggleSidebar('left')">📊 Stats</button>
-      <button class="tbtn" id="btn-skl" onclick="toggleSidebar('right')">📖 Reference</button>
-      <button class="tbtn" id="btn-mute" onclick="toggleMute()">🔊 Mute</button>
-    </div>
-  </div>
-
-  <div class="body-row">
-
-    <!-- LEFT SIDEBAR: Stats -->
-    <div class="sidebar left closed" id="sb-left">
-      <div class="sb-inner">
-        <div class="sb-section" id="sb-session" style="display:none">
-          <h2>Session</h2>
-          <div id="sb-stat-rows"></div>
-          <div style="margin-top:10px" id="sb-pos-leaks"></div>
-        </div>
-        <div class="sb-section" id="sb-lifetime-wrap">
-          <h2>All-Time</h2>
-          <div id="sb-lifetime-rows"></div>
-          <button onclick="resetStats()" style="margin-top:10px;width:100%;background:transparent;border:1px solid rgba(204,51,51,0.4);color:rgba(204,51,51,0.7);border-radius:6px;padding:6px 0;font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='#cc3333';this.style.color='#cc3333'" onmouseout="this.style.borderColor='rgba(204,51,51,0.4)';this.style.color='rgba(204,51,51,0.7)'">↺ Reset All Statistics</button>
-        </div>
-        <div class="sb-section">
-          <h2>Fish Rank Scale</h2>
-          <div id="sb-fish-scale"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CENTER -->
-    <div class="center" id="center">
-
-      <div id="scr-intro">
-        <div class="intro">
-          <div class="icard">
-            <div style="text-align:center;margin-bottom:14px"><img src="data:image/jpeg;base64,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" alt="Piranha Poker League" style="height:52px;width:auto;object-fit:contain"></div><h2>Welcome — Become a Piranha!</h2>
-            <p>Each session deals you hole cards and a seat position at a 9-player tournament table. Make the right pre-flop decision using <strong>Sklansky's 8-Group system</strong>. Every hand is scored 0–5. Your fish rank is revealed at the end.</p><p style="margin-top:8px;font-size:12px;color:#8aaa8a">Score <strong style="color:var(--gold)">90%+</strong> in any session to unlock <strong style="color:var(--gold)">🦈 Hammerhead</strong> — the advanced difficulty tier featuring 3-bet pots, squeeze spots, and short-stack shove decisions.</p>
-            <ul>
-              <li>Group 1 = Premium (AA/KK/QQ/JJ/AKs). Group 8 = Trash.</li>
-              <li>Position determines your playable range. BTN is widest; UTG is tightest.</li>
-              <li>Stack depth: <strong>50 Big Blinds</strong> — the most critical tournament depth.</li>
-              <li>Five actions: Fold / Call / Raise 3BB / 3-Bet ~9BB / All-In.</li>
-            </ul>
-            <div class="gtags">
-              <div class="gtag"><strong>UTG</strong> First to act</div>
-              <div class="gtag"><strong>HJ</strong> Hijack</div>
-              <div class="gtag"><strong>CO</strong> Cutoff</div>
-              <div class="gtag"><strong>BTN</strong> Button</div>
-              <div class="gtag"><strong>SB</strong> Small Blind</div>
-              <div class="gtag"><strong>BB</strong> Big Blind</div>
-              <div class="gtag"><strong>3BB</strong> Standard open</div>
-              <div class="gtag"><strong>3-Bet</strong> Re-raise ~9BB</div>
-            </div>
-          </div>
-          <div class="icard">
-            <h2>How You Are Scored</h2>
-            <p>Every hand is worth <strong>5 points</strong>. Your session score is total points earned divided by the maximum possible, expressed as a percentage. Decisions are graded on a spectrum — poker mistakes are not all equal.</p>
-            <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
-              <div style="display:flex;align-items:center;gap:10px">
-                <span class="pill s5" style="min-width:52px;text-align:center">5/5</span>
-                <div><strong style="color:var(--gold-light)">Perfect</strong> <span style="font-size:12px;color:#8aaa8a">— Exactly the correct action for this hand, position, and scenario.</span></div>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <span class="pill s4" style="min-width:52px;text-align:center">4/5</span>
-                <div><strong style="color:var(--gold-light)">Good</strong> <span style="font-size:12px;color:#8aaa8a">— A strong alternative play. Slightly sub-optimal but not a leak.</span></div>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <span class="pill s3" style="min-width:52px;text-align:center">3/5</span>
-                <div><strong style="color:var(--gold-light)">Acceptable</strong> <span style="font-size:12px;color:#8aaa8a">— Directionally right but wrong sizing or aggression level.</span></div>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <span class="pill s2" style="min-width:52px;text-align:center">2/5</span>
-                <div><strong style="color:var(--gold-light)">Mistake</strong> <span style="font-size:12px;color:#8aaa8a">— Wrong action but not catastrophic. A consistent leak over time.</span></div>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <span class="pill s1" style="min-width:52px;text-align:center">1/5</span>
-                <div><strong style="color:var(--gold-light)">Error</strong> <span style="font-size:12px;color:#8aaa8a">— Clearly wrong. Playing trash from early position, or folding premiums.</span></div>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <span class="pill s1" style="min-width:52px;text-align:center;background:rgba(204,51,51,.3);color:#e06060">0/5</span>
-                <div><strong style="color:var(--gold-light)">Wrong</strong> <span style="font-size:12px;color:#8aaa8a">— Worst possible choice for the spot. Costs chips every time.</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="icard">
-            <h2>Settings</h2>
-            <div class="set-row">
-              <label>Hands:</label>
-              <select id="set-hands">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-              </select>
-              <label style="margin-left:10px">Difficulty:</label>
-              <select id="set-diff">
-                <option value="beginner">Beginner</option>
-                <option value="intermediate" selected>Intermediate</option>
-                <option value="hammerhead" id="opt-hammerhead" disabled>🔒 Hammerhead (score 90%+ to unlock)</option>
-              </select>
-            </div>
-          </div>
-          <div id="lt-intro-wrap"></div>
-          <div style="text-align:center;margin-top:18px;margin-bottom:24px">
-            <button class="btn btn-gold" style="font-size:16px;padding:15px 48px;width:100%;max-width:280px" onclick="startGame()">Deal Me In</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="scr-game" style="display:none">
-        <div class="game">
-          <div class="prog-wrap">
-            <div class="prog-labels"><span id="prog-lbl">Hand 1 of 10</span><span id="prog-r">—</span></div>
-            <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-          </div>
-          <div class="ev-strip">
-            <div class="ev-cell">
-              <div class="ev-val n" id="ev-chips">+0.0</div>
-              <div class="ev-lbl">Chip EV (BB)</div>
-            </div>
-            <div class="ev-cell">
-              <div class="ev-val n" id="ev-score">—</div>
-              <div class="ev-lbl">Score</div>
-            </div>
-            <div class="ev-cell">
-              <div class="ev-val n" id="ev-streak">0</div>
-              <div class="ev-lbl">Streak</div>
-              <div class="sdots" id="sdots"></div>
-            </div>
-          </div>
-          <div class="table-area">
-            <div class="svg-wrap">
-              <svg id="tsvg" viewBox="0 0 280 178" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="140" cy="89" rx="116" ry="70" fill="#1a4a2e" stroke="rgba(201,168,76,0.32)" stroke-width="2"/>
-                <ellipse cx="140" cy="89" rx="94" ry="53" fill="none" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
-                <text x="140" y="93" text-anchor="middle" font-size="9" fill="rgba(201,168,76,0.3)" font-family="Inter,sans-serif">50 BB</text>
-              </svg>
-            </div>
-            <div class="hand-row" id="hand-row"></div>
-            <div class="scen-box"><div class="scen-lbl">Scenario</div><div class="scen-txt" id="scen-txt">—</div></div>
-            <div class="act-lbl">Your Action</div>
-            <div class="act-grid" id="act-grid"></div>
-            <div class="res-box" id="res-box"><div class="res-title" id="res-title"></div><div class="res-body" id="res-body"></div></div>
-            <div class="next-row" id="next-row" style="display:none">
-              <button class="btn btn-outline btn-sm" onclick="nextHand()">Next Hand →</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="scr-results" style="display:none">
-        <div class="results">
-          <div class="fish-hero">
-            <div class="fish-icon" id="r-icon">🐟</div>
-            <div class="fish-tier" id="r-tier">—</div>
-            <div class="fish-score" id="r-score">0%</div>
-            <div class="fish-desc" id="r-desc">—</div>
-          </div>
-          <div id="r-hammerhead-banner" style="display:none;background:rgba(201,168,76,0.1);border:1px solid var(--gold-dim);border-radius:10px;padding:14px 18px;margin-bottom:14px;text-align:center">
-            <div style="font-size:22px">🦈</div>
-            <div style="font-family:'Playfair Display',serif;font-size:17px;color:var(--gold);margin-top:4px">Hammerhead Unlocked</div>
-            <div style="font-size:12px;color:#8aaa8a;margin-top:4px">You scored 90%+. The advanced tier is now available in Settings. 3-bet pots, squeeze spots, and short-stack shove decisions await.</div>
-          </div>
-          <div class="r-grid">
-            <div class="rcard"><h3>Session</h3><div id="r-summary"></div></div>
-            <div class="rcard"><h3>Position Leaks</h3><div id="r-pos"></div></div>
-          </div>
-          <div class="rcard" style="margin-bottom:13px">
-            <h3>All-Time Progress</h3>
-            <div id="r-lifetime"></div>
-            <button onclick="resetStats()" style="margin-top:10px;width:100%;background:transparent;border:1px solid rgba(204,51,51,0.35);color:rgba(204,51,51,0.65);border-radius:6px;padding:6px 0;font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='#cc3333';this.style.color='#cc3333'" onmouseout="this.style.borderColor='rgba(204,51,51,0.35)';this.style.color='rgba(204,51,51,0.65)'">↺ Reset All Statistics</button>
-          </div>
-          <div class="hh-wrap">
-            <h3>Hand Review — tap any hand for rationale</h3>
-            <div id="hh-list"></div>
-          </div>
-          <div class="r-actions">
-            <button class="btn btn-gold" onclick="startGame()">Play Again</button>
-            <button class="btn btn-outline" onclick="showIntro()">Settings</button>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /center -->
-
-    <!-- RIGHT SIDEBAR: Reference -->
-    <div class="sidebar right closed" id="sb-right">
-      <div class="sb-inner">
-        <div class="sb-section">
-          <h2>Sklansky Hand Groups</h2>
-          <div id="skl-list"></div>
-        </div>
-        <div class="sb-section">
-          <h2>Position Open Ranges</h2>
-          <p style="font-size:10px;color:var(--muted);margin-bottom:7px">First-in, 50BB tournament</p>
-          <table class="pos-tbl">
-            <tr><td class="pt-name">UTG</td><td class="pt-open">Open ≤ G2</td><td class="pt-call">Call ≤ G3</td></tr>
-            <tr><td class="pt-name">UTG+1</td><td class="pt-open">Open ≤ G3</td><td class="pt-call">Call ≤ G4</td></tr>
-            <tr><td class="pt-name">UTG+2</td><td class="pt-open">Open ≤ G3</td><td class="pt-call">Call ≤ G4</td></tr>
-            <tr><td class="pt-name">HJ</td><td class="pt-open">Open ≤ G4</td><td class="pt-call">Call ≤ G5</td></tr>
-            <tr><td class="pt-name">CO</td><td class="pt-open">Open ≤ G5</td><td class="pt-call">Call ≤ G6</td></tr>
-            <tr><td class="pt-name">BTN</td><td class="pt-open">Open ≤ G6</td><td class="pt-call">Call ≤ G7</td></tr>
-            <tr><td class="pt-name">SB</td><td class="pt-open">Open ≤ G4</td><td class="pt-call">Call ≤ G5</td></tr>
-            <tr><td class="pt-name">BB</td><td class="pt-open">Defend ≤ G4</td><td class="pt-call">Fold ≥ G6</td></tr>
-          </table>
-        </div>
-      </div>
-    </div>
-
+    <button class="btn-save" onclick="saveSettings()">Save &amp; Restart</button>
+    <button class="btn-save" style="margin-top:8px; background:transparent; border-color: rgba(255,255,255,0.2); color: var(--text-muted);" onclick="closeSettings()">Cancel</button>
   </div>
 </div>
 
-<!-- Mobile bottom nav — only visible on small screens -->
-<div id="mobile-nav" style="display:flex;position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,14,0.97);border-top:1px solid rgba(201,168,76,0.25);padding:8px 16px;padding-bottom:max(8px,env(safe-area-inset-bottom));flex-direction:row;justify-content:space-around;align-items:center;z-index:50">
-  <button onclick="mobileSidebar('left')" id="mob-stats" style="background:rgba(201,168,76,0.08);border:none;border-right:1px solid var(--gold-dim);color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
-    <span style="font-size:22px">📊</span>Stats
-  </button>
-  <button onclick="mobileSidebar('right')" id="mob-ref" style="background:rgba(201,168,76,0.08);border:none;border-right:1px solid var(--gold-dim);color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
-    <span style="font-size:22px">📖</span>Reference
-  </button>
-  <button onclick="toggleMute()" id="mob-mute" style="background:rgba(201,168,76,0.08);border:none;color:var(--gold);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 20px;cursor:pointer;flex:1">
-    <span style="font-size:22px" id="mob-mute-icon">🔊</span>Sound
-  </button>
+<!-- HEADER -->
+<div class="header">
+  <button class="settings-btn" onclick="openSettings()">⚙ Settings</button>
+
+  <!-- PIRANHA LOGO -->
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:6px;">
+    <img src="data:image/png;base64,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" alt="Piranha Poker logo" style="height:70px;object-fit:contain;display:block;">
+    <div>
+      <h1>Fold or Feed</h1>
+      <p>Pre-Flop Discipline Drill</p>
+    </div>
+  </div>
+
+  <div class="score-badge">
+    <div class="score-num" id="scoreDisplay">0</div>
+    <div class="score-lbl">Score</div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+  </div>
+  <div class="progress-label">
+    <span id="handLabel">Hand 1 of 10</span>
+    <span id="scoreLabel">0 / 0 correct</span>
+  </div>
 </div>
 
-<!-- Mobile sidebar overlay — full screen drawer -->
-<div id="mob-overlay" onclick="closeMobileSidebar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:60"></div>
-<div id="mob-drawer" style="display:none;position:fixed;top:0;right:0;bottom:0;width:88%;max-width:340px;background:var(--felt-dark);overflow-y:auto;z-index:70;transform:translateX(100%);transition:transform .28s ease;padding:0">
-  <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--gold-dim);position:sticky;top:0;background:var(--felt-dark)">
-    <span style="font-family:'Playfair Display',serif;color:var(--gold);font-size:15px" id="mob-drawer-title">Reference</span>
-    <button onclick="closeMobileSidebar()" style="background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 4px">×</button>
+<!-- MAIN DRILL -->
+<div class="main" id="drillSection">
+
+  <div class="hand-num-display" id="handNumDisplay">HAND 1</div>
+
+  <!-- Position -->
+  <div class="position-row">
+    <div class="position-tag" id="positionTag">UTG</div>
+    <div class="position-desc" id="positionDesc">Under the Gun — first to act preflop</div>
   </div>
-  <div id="mob-drawer-content" style="padding:14px"></div>
+
+  <!-- Mini table diagram -->
+  <div class="table-wrap">
+    <svg class="poker-table-svg" viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="60" rx="115" ry="50" fill="#0f3d1e" stroke="#2d7a46" stroke-width="4"/>
+      <ellipse cx="130" cy="60" rx="105" ry="40" fill="#1a5c2e" stroke="#d4a843" stroke-width="1"/>
+      <!-- Seat dots: 9 positions -->
+      <g id="seatDots"></g>
+    </svg>
+  </div>
+
+  <!-- Cards -->
+  <div class="cards-row" id="cardsRow"></div>
+
+  <!-- Suited/offsuit badge -->
+  <div style="text-align:center">
+    <div class="suited-badge" id="suitedBadge"></div>
+  </div>
+
+  <!-- Action Panel -->
+  <div class="action-panel">
+    <div class="action-label">Your Action</div>
+    <div class="pf-row">
+      <button class="btn-play" id="btnPlay" onclick="selectAction('play')">&#9654; Play</button>
+      <button class="btn-fold" id="btnFold" onclick="selectAction('fold')">&#10006; Fold</button>
+    </div>
+
+    <div class="bet-section" id="betSection">
+      <div class="bet-label">Raise size (big blinds)</div>
+      <div class="bet-options">
+        <button class="btn-bet" onclick="selectBet('2x BB')">2x BB</button>
+        <button class="btn-bet" onclick="selectBet('2.5x BB')">2.5x BB</button>
+        <button class="btn-bet" onclick="selectBet('3x BB')">3x BB</button>
+        <button class="btn-bet" onclick="selectBet('4x BB')">4x BB</button>
+        <button class="btn-bet" onclick="selectBet('All-in')">All-in</button>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="btnSubmit" onclick="submitAnswer()">Confirm Decision</button>
+  </div>
+
+  <!-- Result Panel -->
+  <div class="result-panel" id="resultPanel">
+    <div class="result-header" id="resultHeader"></div>
+    <div class="result-answer" id="resultAnswer"></div>
+    <button class="rationale-toggle" onclick="toggleRationale()">&#9654; Explain the rationale</button>
+    <div class="rationale-box" id="rationaleBox"></div>
+    <button class="btn-next" onclick="nextHand()">Next Hand &rarr;</button>
+  </div>
+
+  <div class="chip-tray">
+    <div class="chip" style="background:#c0392b">$5</div>
+    <div class="chip" style="background:#1e1e1e">$25</div>
+    <div class="chip" style="background:#2980b9">$50</div>
+    <div class="chip" style="background:#27ae60">$100</div>
+    <div class="chip" style="background:#7d3c98">$500</div>
+  </div>
+</div>
+
+<!-- FINAL SCORE SCREEN -->
+<div class="main final-screen" id="finalScreen">
+  <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
+    <img src="data:image/png;base64,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" alt="Piranha Poker logo" style="height:56px;object-fit:contain;display:block;">
+    <span style="font-family:'Playfair Display',serif;font-size:22px;color:var(--gold-light);font-weight:900;letter-spacing:2px;text-transform:uppercase;">Fold or Feed</span>
+  </div>
+  <div class="final-grade" id="finalGrade">80%</div>
+  <div class="final-label">Session Complete</div>
+  <div id="coachNote" class="coach-note"></div>
+  <div class="final-breakdown" id="finalBreakdown">
+    <h3>Hand History</h3>
+    <div id="breakdownList"></div>
+  </div>
+  <button class="btn-restart" onclick="restartGame()">Play Again</button>
 </div>
 
 <script>
-// Mobile nav visibility
-function updateMobileNav(){
-  // Handled by CSS media queries now
-}
-window.addEventListener('resize', updateMobileNav);
+// ═══════════════════════════════════════════════
+//  DATA: Hand Ranges by Position
+// ═══════════════════════════════════════════════
 
-function mobileSidebar(side){
-  const drawer=document.getElementById('mob-drawer');
-  const overlay=document.getElementById('mob-overlay');
-  const title=document.getElementById('mob-drawer-title');
-  const content=document.getElementById('mob-drawer-content');
-
-  // Copy sidebar content into drawer
-  if(side==='left'){
-    title.textContent='Stats';
-    content.innerHTML=document.getElementById('sb-left').querySelector('.sb-inner').innerHTML;
-  } else {
-    title.textContent='Reference';
-    content.innerHTML=document.getElementById('sb-right').querySelector('.sb-inner').innerHTML;
-  }
-
-  drawer.style.display='block';
-  overlay.style.display='block';
-  // Trigger animation
-  requestAnimationFrame(()=>{ drawer.style.transform='translateX(0)'; });
-}
-
-function closeMobileSidebar(){
-  const drawer=document.getElementById('mob-drawer');
-  const overlay=document.getElementById('mob-overlay');
-  drawer.style.transform='translateX(100%)';
-  setTimeout(()=>{ drawer.style.display='none'; overlay.style.display='none'; },280);
-}
-</script>
-
-<script>
-// ═══════════════════════════════════
-// AUDIO
-// ═══════════════════════════════════
-const SFX=(function(){
-  let ctx=null,muted=false;
-  function gc(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();return ctx;}
-  function tone(f,d,g=0.13,t='sine'){if(muted)return;const c=gc(),o=c.createOscillator(),gn=c.createGain();o.connect(gn);gn.connect(c.destination);o.type=t;o.frequency.value=f;gn.gain.setValueAtTime(0,c.currentTime);gn.gain.linearRampToValueAtTime(g,c.currentTime+0.01);gn.gain.exponentialRampToValueAtTime(0.001,c.currentTime+d);o.start(c.currentTime);o.stop(c.currentTime+d);}
-  return{
-    toggleMute(){muted=!muted;return muted;},
-    isMuted(){return muted;},
-    deal(){[880,660,500].forEach((f,i)=>setTimeout(()=>tone(f,0.07,0.09),i*50));},
-    correct(){tone(523,0.15,0.12);setTimeout(()=>tone(659,0.18,0.10),75);setTimeout(()=>tone(784,0.28,0.09),150);},
-    perfect(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,0.32,0.09),i*55));},
-    wrong(){tone(185,0.22,0.13);setTimeout(()=>tone(148,0.18,0.09),75);},
-    partial(){tone(440,0.13,0.09);setTimeout(()=>tone(392,0.16,0.07),95);},
-    next(){tone(660,0.07,0.07);},
-    end(){[392,523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,0.38,0.08),i*85));}
-  };
-})();
-
-// ═══════════════════════════════════
-// FISH TIERS — Piranha Poker League
-// ═══════════════════════════════════
-const FISH_TIERS=[
-  {min:95,icon:'🐊',tier:'Piranha',short:'Apex predator',desc:'The apex of the Piranha Poker League. Lethal pre-flop discipline, precise range selection. You are exactly who this league is named after.'},
-  {min:85,icon:'🦈',tier:'Barracuda',short:'Swift & dangerous',desc:'Fast, aggressive, dangerous. You apply pressure in the right spots and fold the trash. A legitimate threat at any table.'},
-  {min:73,icon:'🦀',tier:'Mako',short:'Sharp & disciplined',desc:'Sleek and sharp. You understand position and hand strength. A few leaks remain — seal them and you\'re hunting with the top of the food chain.'},
-  {min:60,icon:'🦑',tier:'Squid',short:'More ink than blood',desc:'More ink than blood — you\'re getting there. You know the fundamentals but marginal spots are costing you chips. Keep drilling.'},
-  {min:48,icon:'🐡',tier:'Pufferfish',short:'Looks scarier than it plays',desc:'You look intimidating but you\'re playing too many hands. Tighten up from early position — that\'s where you\'re leaking chips.'},
-  {min:35,icon:'🐟',tier:'Flounder',short:'Bottom of the barrel',desc:'Flopping around a bit. You understand the basics but position discipline is leaking chips every session. Study the range charts.'},
-  {min:22,icon:'🦐',tier:'Shrimp',short:'Getting eaten alive',desc:'Small and getting pushed around. Drill the Sklansky groups daily, especially early position requirements. Everyone can level up.'},
-  {min:0,icon:'🐌',tier:'Sea Snail',short:'Slow & expensive',desc:'Slow and costly. You\'re folding winners and playing losers. More drilling needed — but everyone starts here. Keep going.'}
+const POSITIONS = [
+  { name: 'UTG',   desc: 'Under the Gun — first to act preflop',         seat: 0 },
+  { name: 'UTG+1', desc: 'Early position — still very tight range',       seat: 1 },
+  { name: 'MP',    desc: 'Middle position — slight range expansion',       seat: 2 },
+  { name: 'MP+1',  desc: 'Middle position — open up a bit more',          seat: 3 },
+  { name: 'HJ',    desc: 'Hijack — two seats right of the button',        seat: 4 },
+  { name: 'CO',    desc: 'Cutoff — one seat right of the button',         seat: 5 },
+  { name: 'BTN',   desc: 'Button — best position, acts last postflop',    seat: 6 },
+  { name: 'SB',    desc: 'Small Blind — forced bet, worst postflop pos',  seat: 7 },
+  { name: 'BB',    desc: 'Big Blind — last to act preflop, defends wide', seat: 8 },
 ];
 
-function getFishTier(pct){return FISH_TIERS.find(t=>pct>=t.min)||FISH_TIERS[FISH_TIERS.length-1];}
+// Hand tiers
+// Each hand: [rank1, rank2, suited?, action_by_position_object]
+// action: 'raise' | 'fold' | 'limp'  (we simplify to play vs fold for drill)
+// PLAY_POSITIONS: array of position names where opening raise is correct
 
-// ═══════════════════════════════════
-// SKLANSKY DATA
-// ═══════════════════════════════════
-const SKL={
-  1:{hands:['AA','KK','QQ','JJ','AKs'],name:'Premium',rule:'Raise or 3-bet from any position. These are your most profitable hands — always open, never limp.'},
-  2:{hands:['AQs','AJs','KQs','TT','AKo'],name:'Strong',rule:'Open-raise from any position. 3-bet vs late position opens. Core of a tight-aggressive range.'},
-  3:{hands:['ATs','KJs','QJs','JTs','99','AQo'],name:'Strong-Drawing',rule:'Open UTG+1 or later. Call a raise in position. Strong but position-dependent.'},
-  4:{hands:['KTs','QTs','J9s','T9s','98s','88','AJo','KQo'],name:'Drawing',rule:'Open HJ or later. Call raises with position. Marginal from early position — fold to UTG raises.'},
-  5:{hands:['A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s','K9s','KJo','77','66','JTo','QJo','Q9s','T8s'],name:'Speculative',rule:'Open CO/BTN only. Suited aces have implied odds but need position. Fold to most raises.'},
-  6:{hands:['55','44','33','22','K8s','K7s','K6s','K5s','K4s','K3s','K2s','J8s','T7s','96s','87s','76s','65s','KTo','QTo','J9o'],name:'Marginal',rule:'Button steals and multi-way limped pots only. Small pairs need set-mining odds.'},
-  7:{hands:['Q8s','97s','86s','75s','64s','54s','A9o','K9o','Q9o','J8o','T8o'],name:'Weak',rule:'Rarely played. Fold to almost all raises. High domination risk.'},
-  8:{hands:['J7s','43s','32s','T9o','98o','87o'],name:'Trash',rule:'Fold always. These hands cannot profit at any position or stack depth at 50BB.'}
-};
+const HAND_LIBRARY = [
+  // ── PREMIUM PAIRS ──
+  { r1:'A', r2:'A', suited:false, category:'Premium pair',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'Pocket Aces is the best starting hand in poker. You raise for value from every position, every time. The only question is sizing — never slow-play preflop in tournaments.' },
+  { r1:'K', r2:'K', suited:false, category:'Premium pair',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'Kings are the second-best hand. Raise from any position. Be prepared to 4-bet and get stacks in if facing a 3-bet from most opponents.' },
+  { r1:'Q', r2:'Q', suited:false, category:'Premium pair',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'Queens are a strong raise from any position. In early position at 75bb+, consider how you handle a 3-bet before opening. You will usually continue.' },
+  { r1:'J', r2:'J', suited:false, category:'Strong pair',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'Jacks are raise-first from every seat. Postflop discipline matters more with JJ — be cautious on A/K/Q boards.' },
+  { r1:'T', r2:'T', suited:false, category:'Strong pair',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'Tens play similarly to JJ. Always open-raise. The hand has excellent equity preflop but requires careful postflop navigation on overcards.' },
+  { r1:'9', r2:'9', suited:false, category:'Middle pair',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'Nines are still an open-raise from all positions. At 75bb deep, they lose value as an implied-odds hand versus a 3-bet.' },
+  { r1:'8', r2:'8', suited:false, category:'Middle pair',
+    play: ['MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'Eights are marginal from UTG/UTG+1 at 75bb deep. From UTG you are opening into 8 players — your range needs to be tighter. From MP onward, 88 is a standard raise.' },
+  { r1:'7', r2:'7', suited:false, category:'Small pair',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: 'Sevens rely heavily on implied odds to flop a set. With enough players behind you in UTG/MP, the risk of facing a 3-bet with a hand that plays poorly as an overpair outweighs the benefit. Open from HJ onward.' },
+  { r1:'6', r2:'6', suited:false, category:'Small pair',
+    play: ['CO','BTN','SB','BB'],
+    rationale: 'Sixes are a set-mining hand. They need good implied odds and position. Open from CO or later only.' },
+  { r1:'5', r2:'5', suited:false, category:'Small pair',
+    play: ['CO','BTN','SB','BB'],
+    rationale: 'Small pairs below 66 are speculative. Open only from CO/BTN/blinds where you have strong positional advantage or are stealing.' },
+  { r1:'4', r2:'4', suited:false, category:'Small pair',
+    play: ['BTN','SB','BB'],
+    rationale: 'Fours are a button/blind steal hand only. Too weak to open from EP/MP and rely entirely on flopping a set.' },
+  { r1:'3', r2:'3', suited:false, category:'Small pair',
+    play: ['BTN','SB','BB'],
+    rationale: '33 is played the same as 44. Button/blind raises only. You need near-perfect implied odds to profit.' },
+  { r1:'2', r2:'2', suited:false, category:'Small pair',
+    play: ['BTN','SB','BB'],
+    rationale: 'Deuces are the weakest pair and should only be opened from the button or as a steal from the blinds. They will rarely win unimproved.' },
 
-const RANKS=['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
-const SUITS=['s','h','d','c'];
-const SYM={s:'♠',h:'♥',d:'♦',c:'♣'};
-const COL={s:'black',h:'red',d:'red',c:'black'};
-const POSITIONS=['UTG','UTG+1','UTG+2','HJ','CO','BTN','SB','BB'];
-const PSHORT={'UTG':'UTG','UTG+1':'EP','UTG+2':'EP','HJ':'HJ','CO':'CO','BTN':'BTN','SB':'SB','BB':'BB'};
-const PRANGES={'UTG':{o:2,c:3},'UTG+1':{o:3,c:4},'UTG+2':{o:3,c:4},'HJ':{o:4,c:5},'CO':{o:5,c:6},'BTN':{o:6,c:7},'SB':{o:4,c:5},'BB':{o:4,c:5}};
-const SEAT_DEFS=[{p:'BTN',a:0},{p:'SB',a:42},{p:'BB',a:84},{p:'UTG',a:130},{p:'UTG+1',a:170},{p:'UTG+2',a:210},{p:'HJ',a:252},{p:'CO',a:310}];
-const ALBL={fold:'Fold',call:'Call',raise3:'Raise 3BB',threebet:'3-Bet ~9BB',allin:'All-In'};
-const ACTIONS=[{id:'fold'},{id:'call'},{id:'raise3',label:'Raise 3BB'},{id:'threebet',label:'3-Bet ~9BB'},{id:'allin',label:'All-In'}];
+  // ── BROADWAY HANDS ──
+  { r1:'A', r2:'K', suited:true, category:'Premium broadway suited',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'AKs is the strongest non-pair hand. Raise from every position. It is a 3-bet and 4-bet hand from all positions.' },
+  { r1:'A', r2:'K', suited:false, category:'Premium broadway',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'AKo plays slightly weaker than AKs but is still a raise from any position. Never limp. You often want to 4-bet with this hand.' },
+  { r1:'A', r2:'Q', suited:true, category:'Strong broadway suited',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'AQs is a premium hand — raise from all positions. It 3-bets against late-position openers but folds to a 4-bet from tight EP players.' },
+  { r1:'A', r2:'Q', suited:false, category:'Strong broadway',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'AQo is a raise from all positions but plays more cautiously. Fold to 4-bets from tight players — you are often dominated by AK or a big pair.' },
+  { r1:'A', r2:'J', suited:true, category:'Broadway suited',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'AJs is a raise from every position. It has excellent equity and nut-flush potential. You can 3-bet it from late position versus wide openers.' },
+  { r1:'A', r2:'J', suited:false, category:'Broadway',
+    play: ['MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'AJo is marginal from UTG/UTG+1. Too many hands dominate it (AK, AQ) and it plays poorly out of position. Open from MP onward.' },
+  { r1:'A', r2:'T', suited:true, category:'Broadway suited',
+    play: ['MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'ATs is a solid hand from MP onward. From UTG it is borderline — skip it until you are more advanced. It has good nut-flush potential.' },
+  { r1:'A', r2:'T', suited:false, category:'Broadway',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: 'ATo is a late-position hand. You get dominated too often from early spots. Open from HJ onward as a raise.' },
+  { r1:'K', r2:'Q', suited:true, category:'Broadway suited',
+    play: ['UTG','UTG+1','MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'KQs is a raise from all positions. It flops well, makes strong top pairs and flush draws, and plays well in 3-bet pots.' },
+  { r1:'K', r2:'Q', suited:false, category:'Broadway',
+    play: ['MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'KQo is strong but avoid it from UTG/UTG+1. You are rarely a huge favorite and get dominated by AK/AQ. From MP onward it is a standard raise.' },
+  { r1:'K', r2:'J', suited:true, category:'Broadway suited',
+    play: ['MP','MP+1','HJ','CO','BTN','SB','BB'],
+    rationale: 'KJs is a raise from MP and later. From UTG positions it is too vulnerable to domination.' },
+  { r1:'K', r2:'J', suited:false, category:'Broadway',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: 'KJo is a late-position hand. In early positions you risk being dominated. Raise from HJ/CO/BTN/blinds.' },
+  { r1:'K', r2:'T', suited:true, category:'Broadway suited',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: 'KTs is a late-position raise. The suited component helps, but it is still dominated too often in early positions.' },
+  { r1:'K', r2:'T', suited:false, category:'Broadway',
+    play: ['CO','BTN','SB','BB'],
+    rationale: 'KTo is a CO/BTN raise or blind steal. Too weak from EP/MP with many players left to act.' },
+  { r1:'Q', r2:'J', suited:true, category:'Broadway suited',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: 'QJs is a raise from HJ onward. It has good straight and flush draw potential and plays well multiway.' },
+  { r1:'Q', r2:'J', suited:false, category:'Broadway',
+    play: ['CO','BTN','SB','BB'],
+    rationale: 'QJo is fine from CO/BTN/blinds. The offsuit version lacks the flush draw equity to make it worth opening from earlier seats.' },
+  { r1:'Q', r2:'T', suited:true, category:'Broadway suited',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: 'QTs is a decent late-position raise with straight and flush potential.' },
+  { r1:'J', r2:'T', suited:true, category:'Broadway suited',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: 'JTs is one of the best suited connectors — excellent straight, flush, and combo-draw potential. Raise from HJ on.' },
 
-// ═══════════════════════════════════
-// STATE
-// ═══════════════════════════════════
-let G={hands:10,diff:'intermediate',cur:0,history:[],scores:[],posData:{},ev:0,streak:0,maxStreak:0,act:null,answered:false,curHand:null};
+  // ── SUITED ACES ──
+  { r1:'A', r2:'9', suited:true, category:'Suited ace',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: 'A9s has nut-flush draw value and plays well in position. Open from HJ onward. In early seats it is too often dominated.' },
+  { r1:'A', r2:'8', suited:true, category:'Suited ace',
+    play: ['CO','BTN','SB','BB'],
+    rationale: 'A8s is a late-position raise. The flush draw potential is valuable but it is too weak to raise from early spots.' },
+  { r1:'A', r2:'7', suited:true, category:'Suited ace',
+    play: ['CO','BTN','SB','BB'],
+    rationale: 'A7s is a CO/BTN/blind play. From earlier positions you are often dominated or playing OOP in tough spots.' },
+  { r1:'A', r2:'5', suited:true, category:'Suited ace — wheel',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: 'A5s is actually stronger than A6s/A7s because of the wheel straight (A-2-3-4-5). It has polarized 3-bet value from late position.' },
+  { r1:'A', r2:'4', suited:true, category:'Suited ace — wheel',
+    play: ['CO','BTN','SB','BB'],
+    rationale: 'A4s has wheel potential and nut-flush draws. Open from CO and later.' },
+  { r1:'A', r2:'3', suited:true, category:'Suited ace',
+    play: ['BTN','SB','BB'],
+    rationale: 'A3s is a button/blind play only. Too speculative from earlier seats without enough compensating equity.' },
+  { r1:'A', r2:'2', suited:true, category:'Suited ace',
+    play: ['BTN','SB','BB'],
+    rationale: 'A2s has nut-flush draw value but is too weak from EP/MP. Button and blind opens only.' },
 
-// ═══════════════════════════════════
-// DECK / HAND KEY / SKLANSKY
-// ═══════════════════════════════════
-function deck(){const d=[];for(const r of RANKS)for(const s of SUITS)d.push({rank:r,suit:s});return d;}
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function hkey(c1,c2){const r1=RANKS.indexOf(c1.rank),r2=RANKS.indexOf(c2.rank);const[hi,lo]=r1<=r2?[c1,c2]:[c2,c1];if(hi.rank===lo.rank)return hi.rank+lo.rank;return hi.rank+lo.rank+(hi.suit===lo.suit?'s':'o');}
-function getSKL(k){for(const[g,d]of Object.entries(SKL)){if(d.hands.includes(k))return parseInt(g);}return 9;}
+  // ── SUITED CONNECTORS ──
+  { r1:'9', r2:'8', suited:true, category:'Suited connector',
+    play: ['HJ','CO','BTN','SB','BB'],
+    rationale: '98s is a solid suited connector with excellent straight and flush draw potential. Raise from HJ onward.' },
+  { r1:'8', r2:'7', suited:true, category:'Suited connector',
+    play: ['CO','BTN','SB','BB'],
+    rationale: '87s has good playability but needs position to realize equity. Open from CO or later.' },
+  { r1:'7', r2:'6', suited:true, category:'Suited connector',
+    play: ['CO','BTN','SB','BB'],
+    rationale: '76s is a CO/BTN steal hand with good implied odds when it connects. Fold from early spots.' },
+  { r1:'6', r2:'5', suited:true, category:'Suited connector',
+    play: ['BTN','SB','BB'],
+    rationale: '65s is borderline. Play it from the button or as a steal from the blinds only.' },
 
-// ═══════════════════════════════════
-// SCENARIO ENGINE
-// ═══════════════════════════════════
-function pickScen(pos,diff){
-  if(diff==='hammerhead'){
-    const adv={
-      BB:['facing_3bet','squeeze_spot','short_stack_shove','facing_raise','blind_vs_blind'],
-      SB:['facing_3bet','short_stack_shove','first_in','blind_vs_blind'],
-      BTN:['facing_3bet','squeeze_spot','short_stack_shove','first_in','facing_raise'],
-      CO:['facing_3bet','squeeze_spot','short_stack_shove','first_in','facing_raise']
-    };
-    const pool=adv[pos]||['facing_3bet','squeeze_spot','short_stack_shove','first_in','facing_raise'];
-    return pool[Math.floor(Math.random()*pool.length)];
-  }
-  const p={BB:['facing_raise','facing_limp','blind_vs_blind'],SB:['first_in','facing_raise','blind_vs_blind']};
-  const pool=p[pos]||['first_in','facing_raise','facing_limp'];
-  return pool[Math.floor(Math.random()*pool.length)];
-}
-function scenHTML(pos,scen){
-  const rp=['UTG','UTG+1','HJ','CO','BTN'].filter(x=>x!==pos);
-  const rv=rp[Math.floor(Math.random()*rp.length)]||'UTG';
-  G.curHand.raiser=rv;
-  const nl=Math.floor(Math.random()*3)+1;
+  // ── GARBAGE / TRAPS ──
+  { r1:'K', r2:'9', suited:false, category:'Weak king',
+    play: ['BTN','SB','BB'],
+    rationale: 'K9o is a trap hand. Many beginners play it because it has a king. It is dominated by KT+, AK, AQ, and big pairs. Fold from EP/MP/HJ/CO. Only open from BTN/blinds as a steal.' },
+  { r1:'Q', r2:'9', suited:false, category:'Weak queen',
+    play: ['BTN','SB','BB'],
+    rationale: 'Q9o is a weak hand dominated frequently. Button steal or fold.' },
+  { r1:'J', r2:'9', suited:false, category:'Weak connector',
+    play: ['BTN','SB','BB'],
+    rationale: 'J9o has straight potential but not enough to play from early spots. BTN/blind only.' },
+  { r1:'T', r2:'9', suited:false, category:'Connector',
+    play: ['CO','BTN','SB','BB'],
+    rationale: 'T9o is borderline late-position. The offsuit version needs better position than the suited variant.' },
+  { r1:'7', r2:'2', suited:false, category:'Garbage',
+    play: [],
+    rationale: '72o is the worst starting hand in poker. There is NO position where this is a profitable open raise in a 9-handed tournament. Fold every time.' },
+  { r1:'8', r2:'3', suited:false, category:'Garbage',
+    play: [],
+    rationale: '83o has no straight, flush, or pair potential worth pursuing. Fold from every position.' },
+  { r1:'9', r2:'4', suited:false, category:'Garbage',
+    play: ['BTN'],
+    rationale: '94o is almost always a fold. Only a very loose button steal in the right dynamic. In a drill context, fold this.' },
+  { r1:'K', r2:'4', suited:false, category:'Weak king',
+    play: ['BTN'],
+    rationale: 'K4o is a weak hand. The king is a trap — you will often make weak top pair and get dominated. Fold from all but the very last position.' },
+  { r1:'Q', r2:'4', suited:false, category:'Garbage',
+    play: [],
+    rationale: 'Q4o has no redeeming qualities for a standard open raise. Fold.' },
+  { r1:'J', r2:'4', suited:false, category:'Garbage',
+    play: [],
+    rationale: 'J4o is unplayable. Fold from every position.' },
+  { r1:'T', r2:'4', suited:false, category:'Garbage',
+    play: [],
+    rationale: 'T4o is garbage. Fold.' },
+  { r1:'5', r2:'3', suited:false, category:'Garbage',
+    play: [],
+    rationale: '53o lacks the suited component that would give it some value. Fold.' },
+  { r1:'J', r2:'6', suited:false, category:'Garbage',
+    play: [],
+    rationale: 'J6o is a junk hand. The jack alone is not enough. Fold.' },
+  { r1:'Q', r2:'7', suited:false, category:'Weak queen',
+    play: ['BTN'],
+    rationale: 'Q7o is a borderline button steal in a very tight table. Otherwise fold.' },
+  { r1:'A', r2:'6', suited:false, category:'Weak ace',
+    play: ['CO','BTN','SB','BB'],
+    rationale: 'A6o is a late-position steal hand. The offsuit ace with a weak kicker plays poorly OOP and loses to AJ+ often. CO/BTN/blinds only.' },
+];
 
-  // Randomised stack depths (BB) — set based on scenario type
-  const stdStacks=[30,40,50,60,75];
-  const stack=stdStacks[Math.floor(Math.random()*stdStacks.length)];
-  // Only set stack now for non-shove scenarios; shove sets its own below
-  if(scen!=='short_stack_shove') G.curHand.stack=stack;
+// ═══════════════════════════════════════════════
+//  SUIT DATA
+// ═══════════════════════════════════════════════
+const SUITS = ['♠','♥','♦','♣'];
+const SUIT_COLOR = { '♠':'black','♣':'black','♥':'red','♦':'red' };
 
-  // Villain archetypes — affect how we frame the scenario
-  const villains=[
-    {label:'a tight-aggressive (TAG) regular',style:'tag'},
-    {label:'a loose-aggressive (LAG) player',style:'lag'},
-    {label:'a tight-passive nit',style:'nit'},
-    {label:'an unknown player',style:'unknown'},
-    {label:'a loose-passive fish',style:'fish'},
-    {label:'a solid recreational player',style:'rec'}
-  ];
-  const villain=villains[Math.floor(Math.random()*villains.length)];
-  G.curHand.villain=villain;
+// ═══════════════════════════════════════════════
+//  GAME STATE
+// ═══════════════════════════════════════════════
+let totalHands = 10;
+let currentHand = 0;
+let score = 0;
+let correct = 0;
+let history = [];
+let selectedAction = null;
+let selectedBet = null;
+let currentHandData = null;
 
-  // First-in phrasings
-  const firstInPhrases=[
-    `Action folds to you in <strong>${pos}</strong>. You are first to open an unraised pot. Stack: <strong>${stack}BB</strong>.`,
-    `It folds around to you in <strong>${pos}</strong>. The pot is unopened. Stack: <strong>${stack}BB</strong>. Your move.`,
-    `Everyone folds to <strong>${pos}</strong> (you). You have the first opportunity to enter the pot. Stack: <strong>${stack}BB</strong>.`,
-    `Folds to you in <strong>${pos}</strong>. No one has entered the pot. Stack: <strong>${stack}BB</strong>. Open or fold?`,
-    `You are in <strong>${pos}</strong> with an unopened pot in front of you. Stack: <strong>${stack}BB</strong>. What do you do?`
-  ];
-
-  // Facing-raise phrasings
-  const facingRaisePhrases=[
-    `<strong>${rv}</strong> opens to 3BB. Action folds to you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. Villain is ${villain.label}.`,
-    `<strong>${rv}</strong> raises to 3BB. It folds around to you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. You are up against ${villain.label}.`,
-    `<strong>${rv}</strong> opens for 3BB. Everyone folds to you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. Villain is ${villain.label}.`,
-    `There is a single raise to 3BB from <strong>${rv}</strong>. Action is on you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. Villain reads as ${villain.label}.`,
-    `<strong>${rv}</strong> puts in a standard open to 3BB. It folds to <strong>${pos}</strong> (you). Stack: <strong>${stack}BB</strong>. Villain appears to be ${villain.label}.`
-  ];
-
-  // Limp phrasings
-  const nounLimpers={1:'One player limps',2:'Two players limp',3:'Three players limp'};
-  const limpPhrases=[
-    `${nounLimpers[nl]} into the pot. Action is on you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>.`,
-    `${nounLimpers[nl]} in ahead of you. You are in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. Isolate or play along?`,
-    `${nl===1?'A player limps':'Multiple players limp'} in front of you. You are in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>.`,
-    `The pot has ${nl} limp${nl>1?'s':''} in it. Action folds to you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. What do you do?`
-  ];
-
-  // Blind vs blind phrasings
-  const bvbBBPhrases=[
-    `Folds around. <strong>SB</strong> opens to 3BB. You are in the <strong>BB</strong>. Stack: <strong>${stack}BB</strong>.`,
-    `Everyone folds. The <strong>SB</strong> puts in a raise to 3BB. You are the last to act in the <strong>BB</strong>. Stack: <strong>${stack}BB</strong>.`,
-    `It folds to the <strong>SB</strong> who raises to 3BB. You are in the <strong>BB</strong>. Stack: <strong>${stack}BB</strong>. Defend or fold?`,
-    `<strong>SB</strong> opens to 3BB in a blind vs blind spot. You are in the <strong>BB</strong>. Stack: <strong>${stack}BB</strong>.`
-  ];
-  const bvbSBPhrases=[
-    `Folds to you in the <strong>SB</strong>. Only the <strong>BB</strong> remains. Stack: <strong>${stack}BB</strong>. What do you do?`,
-    `Everyone folds to the <strong>SB</strong> (you). It is a heads-up blind vs blind situation. Stack: <strong>${stack}BB</strong>.`,
-    `Action folds around to you in the <strong>SB</strong>. The <strong>BB</strong> is your only opponent. Stack: <strong>${stack}BB</strong>.`,
-    `You are in the <strong>SB</strong> with everyone folded. Heads-up against the <strong>BB</strong>. Stack: <strong>${stack}BB</strong>.`
-  ];
-
-  // Hammerhead: facing 3-bet phrasings
-  const caller3b=['CO','BTN','HJ'].filter(x=>x!==pos&&x!==rv)[0]||'CO';
-  const facing3bPhrases=[
-    `<strong>${rv}</strong> opens 3BB. <strong>${caller3b}</strong> 3-bets to 9BB. Action folds to you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>.`,
-    `<strong>${rv}</strong> raises 3BB. <strong>${caller3b}</strong> re-raises to 9BB. It folds to you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>.`,
-    `There is a raise to 3BB from <strong>${rv}</strong> and a 3-bet to 9BB from <strong>${caller3b}</strong>. Action is on you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>.`,
-    `<strong>${rv}</strong> opens, <strong>${caller3b}</strong> 3-bets to 9BB. Everyone else folds to you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. Cold-call, 4-bet, or fold?`
-  ];
-
-  // Hammerhead: squeeze phrasings
-  const nSqueeze=Math.floor(Math.random()*2)+2;
-  const squeezePhrases=[
-    `<strong>${rv}</strong> opens 3BB. ${nSqueeze} players call. Action is on you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. Squeeze opportunity — multiway pot.`,
-    `<strong>${rv}</strong> raises and ${nSqueeze} players flat. It folds to you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. The pot is bloated with dead money.`,
-    `There is an open from <strong>${rv}</strong> and ${nSqueeze} callers. You are in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. Squeeze, call, or fold?`,
-    `<strong>${rv}</strong> opens, ${nSqueeze} players peel. Action on you in <strong>${pos}</strong>. Stack: <strong>${stack}BB</strong>. Classic squeeze spot with significant dead money.`
-  ];
-
-  // Hammerhead: short-stack shove phrasings
-  const shortStacks=[15,17,18,19,20];
-  const ss=shortStacks[Math.floor(Math.random()*shortStacks.length)];
-  G.curHand.stack=ss;
-  const shovePhrases=[
-    `Stack depth: <strong>${ss}BB</strong>. Action folds to you in <strong>${pos}</strong>. Push-or-fold territory. What do you do?`,
-    `You are in <strong>${pos}</strong> with <strong>${ss}BB</strong> behind. Action folds to you. Shove or fold?`,
-    `<strong>${ss}BB</strong> effective stack. It folds to you in <strong>${pos}</strong>. You are in push-or-fold range. Your action?`,
-    `Folds to you in <strong>${pos}</strong>. Stack: <strong>${ss}BB</strong>. At this depth, min-raises are a mistake. Shove or fold.`
-  ];
-
-  function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
-
-  if(scen==='first_in')    return pick(firstInPhrases);
-  if(scen==='facing_raise') return pick(facingRaisePhrases);
-  if(scen==='facing_limp')  return pick(limpPhrases);
-  if(scen==='blind_vs_blind') return pos==='BB'?pick(bvbBBPhrases):pick(bvbSBPhrases);
-  if(scen==='facing_3bet')  return pick(facing3bPhrases);
-  if(scen==='squeeze_spot') return pick(squeezePhrases);
-  if(scen==='short_stack_shove') return pick(shovePhrases);
-  return 'Action is on you.';
-}
-
-function getCorrect(grp,pos,scen){
-  // ── HAMMERHEAD SCENARIOS ──
-
-  // Pre-flop equity lookup vs typical ranges (approximate, based on Sklansky group)
-  // Format: [equity_vs_3bet_range, equity_vs_squeeze_range, equity_vs_call_range]
-  // Source: standard equity calculations vs TAG 3-bet/squeeze ranges
-  const EQUITY={
-    1: {vt3b:'82%', vsq:'79%', vcall:'76%', note:'massive equity favorite'},
-    2: {vt3b:'68%', vsq:'65%', vcall:'63%', note:'solid equity advantage'},
-    3: {vt3b:'55%', vsq:'52%', vcall:'50%', note:'near coin-flip, position dependent'},
-    4: {vt3b:'44%', vsq:'41%', vcall:'42%', note:'slight underdog to 3-bet ranges'},
-    5: {vt3b:'38%', vsq:'35%', vcall:'39%', note:'clear underdog'},
-    6: {vt3b:'32%', vsq:'30%', vcall:'34%', note:'significant underdog'},
-    7: {vt3b:'27%', vsq:'25%', vcall:'29%', note:'heavy underdog'},
-    8: {vt3b:'22%', vsq:'20%', vcall:'24%', note:'dominated in most run-outs'},
-    9: {vt3b:'18%', vsq:'17%', vcall:'20%', note:'nearly drawing dead'}
-  };
-
-  // Short-stack push equity vs calling range (approximate at 18BB)
-  const SHOVE_EQ={
-    1:'~80% vs any calling range',2:'~72% vs typical calls',3:'~63% vs wide calls',
-    4:'~57% vs wide calls',5:'~51% vs loose calls — near break-even',
-    6:'~44% vs any reasonable call',7:'~38% — losing shove vs most calls',
-    8:'~32% — heavy underdog when called',9:'~26% — nearly dominated'
-  };
-
-  if(scen==='facing_3bet'){
-    const r=PRANGES[pos];const gn=SKL[grp]?.name||'Unknown';
-    const eq=EQUITY[grp]||EQUITY[9];
-    if(grp<=1)return{a:'threebet',alt:'allin',ev:2.0,reason:`<strong>Group 1 vs a 3-bet</strong> — 4-bet for value every time. AA/KK/QQ/JJ/AKs are the nuts of the pre-flop range.<br><br><strong style="color:var(--gold)">Equity: ${eq.vt3b} vs a standard 3-bet range</strong> — you are a massive favorite. Getting all-in pre is correct at <strong>${stack}BB</strong> with these hands. Never flat a 3-bet with AA or KK — you give away value and let dominated hands realize equity cheaply.`};
-    if(grp<=2&&['BTN','CO'].includes(pos))return{a:'threebet',alt:'call',ev:1.4,reason:`<strong>Group 2 in position facing a 3-bet</strong> — 4-betting as a bluff/value hybrid is valid. Calling in position is also reasonable.<br><br><strong style="color:var(--gold)">Equity: ${eq.vt3b} vs a standard 3-bet range</strong> — you are a ${eq.note}. Folding is a significant mistake here. You have enough equity to play a big pot, especially with position.`};
-    if(grp<=3&&['BTN','CO'].includes(pos))return{a:'call',alt:'fold',ev:0.6,reason:`<strong>Group 3 in late position facing a 3-bet</strong> — calling in position is marginal but defensible.<br><br><strong style="color:var(--gold)">Equity: ${eq.vt3b} vs a standard 3-bet range</strong> — you are ${eq.note}. Proceed carefully. Fold to heavy action on dangerous boards. Never 4-bet this hand for value — you don't have enough equity to build a huge pot.`};
-    return{a:'fold',ev:0,reason:`<strong>Group ${grp} (${gn}) facing a 3-bet from ${pos}</strong> — fold.<br><br><strong style="color:var(--wrong)">Equity: ${eq.vt3b} vs a standard 3-bet range</strong> — you are ${eq.note}. 3-bet pots require premium holdings to continue. The pot odds and implied odds do not compensate for the equity deficit you face here.`};
-  }
-
-  if(scen==='squeeze_spot'){
-    const gn=SKL[grp]?.name||'Unknown';
-    const eq=EQUITY[grp]||EQUITY[9];
-    if(grp<=1)return{a:'threebet',ev:1.8,reason:`<strong>Group 1 in a squeeze spot</strong> — always squeeze. An opener plus two callers means significant dead money.<br><br><strong style="color:var(--gold)">Equity: ${eq.vsq} vs the combined range of opener + two callers</strong> — you are a ${eq.note}. Your premium hand dominates all three ranges. The squeeze gets the dead money in and isolates you against dominated holdings.`};
-    if(grp<=2&&['BTN','CO','HJ'].includes(pos))return{a:'threebet',alt:'fold',ev:1.0,reason:`<strong>Group 2 squeeze from late position</strong> — squeezing here has strong fold equity plus solid equity when called.<br><br><strong style="color:var(--gold)">Equity: ${eq.vsq} vs the combined calling range</strong> — you are a ${eq.note}. The callers are weak by definition — they didn't 3-bet. Your squeeze wins the pot outright often, and when called you have strong equity.`};
-    if(grp<=3&&['BTN','CO'].includes(pos))return{a:'call',alt:'fold',ev:0.3,reason:`<strong>Group 3 multiway</strong> — calling is marginal. Squeezing is too ambitious here.<br><br><strong style="color:var(--gold)">Equity: ${eq.vsq} vs the field</strong> — you are ${eq.note}. In a multiway pot this equity edge shrinks further. You need to flop a strong hand to continue. Lean fold is also defensible.`};
-    return{a:'fold',ev:0,reason:`<strong>Group ${grp} (${gn}) in a multiway squeeze spot</strong> — fold.<br><br><strong style="color:var(--wrong)">Equity: ${eq.vsq} vs the combined field</strong> — you are ${eq.note}. In squeeze spots with multiple players already committed, your equity deficit is compounded by the multiway dynamics. Fold and wait for a better spot.`};
-  }
-
-  if(scen==='short_stack_shove'){
-    const gn=SKL[grp]?.name||'Unknown';
-    const sheq=SHOVE_EQ[grp]||SHOVE_EQ[9];
-    if(grp<=2)return{a:'allin',ev:2.0,reason:`<strong>Group ${grp} at 18BB — shove all-in</strong>. At this stack depth the math is unambiguous.<br><br><strong style="color:var(--gold)">Shove equity: ${sheq}</strong>. A 3BB open pot-commits you anyway and telegraphs strength without maximizing fold equity. Shoving applies maximum pressure, denies equity to hands that would fold to a small raise, and gets maximum value when called. Group 1–2 hands are profitable shoves from any position at 18BB.`};
-    if(grp<=3&&['BTN','CO','HJ','SB'].includes(pos))return{a:'allin',alt:'fold',ev:1.2,reason:`<strong>Group 3 from late position at 18BB — shove</strong>. You have sufficient equity and meaningful fold equity.<br><br><strong style="color:var(--gold)">Shove equity: ${sheq}</strong>. At 18BB you are in push-or-fold territory. A min-raise or standard raise is a mistake — it commits too many chips to fold but not enough to maximize fold equity. Shoving with Group 3 from late position is a profitable play.`};
-    if(grp<=4&&['BTN','CO'].includes(pos))return{a:'allin',alt:'fold',ev:0.6,reason:`<strong>Group 4 from the button at 18BB — marginal shove</strong>. Fold equity makes this profitable from BTN/CO specifically.<br><br><strong style="color:var(--gold)">Shove equity: ${sheq}</strong>. You are a slight underdog when called, but the fold equity from the button compensates. This is a push-fold spot — not a raise-fold spot. Adjust based on opponent: tighter BB = shove; calling station = lean fold.`};
-    if(grp<=5&&pos==='BTN')return{a:'fold',alt:'allin',ev:0.1,reason:`<strong>Group 5 from BTN at 18BB — close fold</strong>. Shoving is not disastrous but folding is marginally preferred.<br><br><strong style="color:var(--gold)">Shove equity: ${sheq}</strong>. You are near break-even equity when called. Against a tight BB the fold equity justifies a shove. Against a loose BB who calls wide, folding is clearly correct. When in doubt, fold and preserve equity for a better spot.`};
-    return{a:'fold',ev:0,reason:`<strong>Group ${grp} (${gn}) at 18BB from ${pos}</strong> — fold.<br><br><strong style="color:var(--wrong)">Shove equity: ${sheq}</strong>. At short stack depths you need hands with strong equity when called to shove profitably. This hand puts you at risk of being called in very bad shape, negating the fold equity. Patient play is required — wait for a better hand.`};
-  }
-
-  // ── STANDARD SCENARIOS ──
-  const stack=G.curHand?.stack||50;
-  const villain=G.curHand?.villain||{label:'a TAG regular',style:'tag'};
-  const rv=G.curHand?.raiser||'the opener';
-  // Stack-depth modifier — only meaningful for standard scenarios (not shove which has own logic)
-  const stackNote=(scen==='short_stack_shove')?'':
-                  stack<=30?` At <strong>${stack}BB</strong>, ranges tighten — fold equity is lower and stack-off thresholds are closer. Shove-or-fold logic starts to apply.`:
-                  stack<=40?` At <strong>${stack}BB</strong>, you are approaching push-or-fold territory. Prefer raises that pot-commit you to strong hands only.`:
-                  stack>=75?` At <strong>${stack}BB</strong> deep, implied odds increase significantly — suited connectors and small pairs gain value when played in position.`:
-                  stack>=60?` At <strong>${stack}BB</strong> deep, implied odds are elevated — position and post-flop skill matter more than at shorter depths.`:
-                  ` Stack: <strong>${stack}BB</strong>.`;
-  // Villain style note
-  const villainNote=villain.style==='lag'?` Note: vs a LAG opener, your calling and 3-bet ranges widen — their range is wide enough that you have more equity than vs a TAG.`:
-                    villain.style==='nit'?` Note: vs a nit, tighten up significantly — their opening range is extremely narrow. Fold more, 3-bet only the top of your range.`:
-                    villain.style==='fish'?` Note: vs a loose-passive fish, prefer calling over 3-betting — keep them in the pot. Don't bluff them off their hand.`:
-                    villain.style==='tag'?` Note: vs a TAG regular, respect their range — stick to standard ranges and avoid marginal spots.`:
-                    '';
-  const r=PRANGES[pos];const gn=SKL[grp]?.name||'Unknown';
-  if(scen==='first_in'){
-    if(grp<=1)return{a:'raise3',alt:'threebet',ev:1.2,reason:`<strong>Group 1 (${gn})</strong> — mandatory open from every seat. Raise 3BB minimum; consider 3-betting if there will be callers behind. These hands want value and isolation.`};
-    if(grp<=r.o)return{a:'raise3',ev:1.0,reason:`<strong>Group ${grp} (${gn})</strong> is within your opening range from <strong>${pos}</strong>. Open to 3BB. This hand has enough equity and playability to profit as the preflop aggressor.`};
-    if(grp<=r.o+1)return{a:'fold',alt:'raise3',ev:0.1,reason:`<strong>Group ${grp} (${gn})</strong> is just outside your standard opening range from <strong>${pos}</strong>. Folding is marginally correct. A disciplined steal vs weak lineups is acceptable but not the default.`};
-    return{a:'fold',ev:0,reason:`<strong>Group ${grp} (${gn}) — you are in ${pos}, first to act</strong> — fold. This hand is outside your profitable opening range from early/middle position. Playing it leaks chips over thousands of hands. Discipline in these spots separates winning players from losing ones.${stackNote}`};
-  }
-  if(scen==='facing_raise'){
-    if(grp<=1)return{a:'threebet',ev:1.5,reason:`<strong>Group 1 facing a raise</strong> — always 3-bet for value. Maximum money in the pot when you have the best hand. Calling here gives your opponent too much information and lets speculative hands in cheaply.`};
-    if(grp<=2&&['CO','BTN','HJ'].includes(pos))return{a:'threebet',alt:'call',ev:1.1,reason:`<strong>Group ${grp} in late position facing a raise</strong> — 3-bet applies pressure and has fold equity. Calling in position is also profitable. Both lines work; 3-bet is slightly preferred as the aggressor.`};
-    if(grp<=r.c)return{a:'call',ev:0.4,reason:`<strong>Group ${grp} — you are in ${pos} facing a raise</strong> — call. Strong enough to continue but not enough to 3-bet for value against ${villain.label}'s range. Realize equity in position; fold to large action on dangerous boards.${villainNote}${stackNote}`};
-    return{a:'fold',ev:0,reason:`<strong>Group ${grp} — you are in ${pos} facing a raise</strong> — fold. Against ${villain.label}'s 3BB open, your hand doesn't have the equity or implied odds to continue from this position.${villainNote}${stackNote}`};
-  }
-  if(scen==='facing_limp'){
-    if(grp<=2)return{a:'raise3',ev:1.1,reason:`<strong>Group ${grp} vs limpers</strong> — always isolate. Limpers signal weakness. Raise to 4–5BB, build a pot you dominate. Never limp behind with a strong hand — take the initiative.`};
-    if(grp<=r.o+1)return{a:'raise3',alt:'call',ev:0.7,reason:`<strong>Group ${grp} vs limpers</strong> — isolation raise is correct. You likely have the best hand. Two ways to win: fold equity now, or value post-flop with the best range.`};
-    if(grp<=r.o+2)return{a:'call',alt:'fold',ev:0.2,reason:`<strong>Group ${grp} vs limpers</strong> — marginal call for pot odds. See a cheap flop; don't build a big pot without improvement. Folding is also acceptable.`};
-    return{a:'fold',ev:0,reason:`<strong>Group ${grp} — fold even vs limpers</strong>. This hand lacks the equity to profit in a multi-way pot even cheaply. The pot odds don't compensate for likely domination or weak equity.${stackNote}`};
-  }
-  if(scen==='blind_vs_blind'){
-    if(pos==='BB'){
-      if(grp<=3)return{a:'threebet',ev:1.2,reason:`<strong>Group ${grp} in BB vs SB open</strong> — 3-bet for value. SB opens wide. You have a strong hand and near-equal position. Apply maximum pressure.`};
-      if(grp<=5)return{a:'call',ev:0.5,reason:`<strong>Group ${grp} in BB vs SB raise</strong> — call. You're getting a discount, closing the action, and SB ranges are wide in this spot.`};
-      return{a:'fold',alt:'call',ev:0.1,reason:`<strong>Group ${grp} BB vs SB</strong> — close spot, lean fold. Calling is not a disaster but this hand plays poorly out of position without strong equity.`};
-    }else{
-      if(grp<=2)return{a:'raise3',ev:0.9,reason:`<strong>Group ${grp} from SB</strong> — raise. Strong hand, but you'll be OOP every street. Raise to build a pot you can take down. Never limp with a premium hand in SB.`};
-      if(grp<=4)return{a:'raise3',alt:'fold',ev:0.4,reason:`<strong>Group ${grp} from SB</strong> — raising is reasonable vs a passive BB. Remember: you're OOP every street. Don't build a big pot here without top-of-range hands.`};
-      return{a:'fold',ev:0,reason:`<strong>Group ${grp} from SB</strong> — fold. SB is the worst seat: forced money blind AND out of position all streets. Don't compound it with a marginal hand.`};
+// ═══════════════════════════════════════════════
+//  TABLE DIAGRAM
+// ═══════════════════════════════════════════════
+function drawTable(activeSeat) {
+  const svg = document.getElementById('seatDots');
+  const cx = 130, cy = 60, rx = 108, ry = 44;
+  svg.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const angle = (i / 9) * 2 * Math.PI - Math.PI / 2;
+    const x = cx + rx * Math.cos(angle);
+    const y = cy + ry * Math.sin(angle);
+    const isActive = i === activeSeat;
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', x);
+    circle.setAttribute('cy', y);
+    circle.setAttribute('r', isActive ? 9 : 6);
+    circle.setAttribute('fill', isActive ? '#d4a843' : 'rgba(0,0,0,0.4)');
+    circle.setAttribute('stroke', isActive ? '#f5d67a' : 'rgba(212,168,67,0.3)');
+    circle.setAttribute('stroke-width', '1.5');
+    svg.appendChild(circle);
+    if (isActive) {
+      const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+      text.setAttribute('x', x);
+      text.setAttribute('y', y + 4);
+      text.setAttribute('text-anchor','middle');
+      text.setAttribute('font-size','6');
+      text.setAttribute('font-family','IBM Plex Mono, monospace');
+      text.setAttribute('fill','#0f3d1e');
+      text.setAttribute('font-weight','bold');
+      text.textContent = 'YOU';
+      svg.appendChild(text);
     }
   }
-  return{a:'fold',ev:0,reason:'Fold and wait for a better spot.'};
 }
 
-function scoreAct(player,correct){
-  if(player===correct.a)return{pts:5};
-  if(correct.alt&&player===correct.alt)return{pts:4};
-  if(correct.a==='fold'&&player==='call')return{pts:2};
-  if(correct.a==='call'&&player==='fold')return{pts:3};
-  if(correct.a==='raise3'&&player==='threebet')return{pts:3};
-  if(correct.a==='fold'&&player==='raise3')return{pts:1};
-  if(correct.a==='call'&&player==='raise3')return{pts:2};
-  return{pts:0};
-}
-
-// ═══════════════════════════════════
-// TABLE DRAWING
-// ═══════════════════════════════════
-function drawTable(activePos){
-  const svg=document.getElementById('tsvg');
-  svg.querySelectorAll('.sg').forEach(e=>e.remove());
-  const cx=140,cy=89,rx=110,ry=66;
-  SEAT_DEFS.forEach(s=>{
-    const rad=s.a*Math.PI/180,x=cx+rx*Math.cos(rad),y=cy+ry*Math.sin(rad);
-    const act=s.p===activePos;
-    const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','sg');
-    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx',x.toFixed(1));c.setAttribute('cy',y.toFixed(1));c.setAttribute('r','14');
-    c.setAttribute('fill',act?'rgba(201,168,76,0.3)':'rgba(8,15,10,0.92)');
-    c.setAttribute('stroke',act?'#c9a84c':'rgba(201,168,76,0.18)');
-    c.setAttribute('stroke-width',act?'2':'1');g.appendChild(c);
-    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
-    t.setAttribute('x',x.toFixed(1));t.setAttribute('y',(y+1).toFixed(1));
-    t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');
-    t.setAttribute('font-size',s.p.length>3?'5.5':'6.5');t.setAttribute('font-family','Inter,sans-serif');
-    t.setAttribute('font-weight',act?'600':'400');
-    t.setAttribute('fill',act?'#c9a84c':'rgba(190,215,190,0.5)');
-    const lbl=s.p==='UTG+1'||s.p==='UTG+2'?'EP':s.p;t.textContent=lbl;g.appendChild(t);
-    if(s.p==='BTN'){
-      const db=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      db.setAttribute('cx',(x-9).toFixed(1));db.setAttribute('cy',(y-9).toFixed(1));
-      db.setAttribute('r','4');db.setAttribute('fill','#c9a84c');db.setAttribute('stroke','#080f0a');db.setAttribute('stroke-width','1');
-      const dt=document.createElementNS('http://www.w3.org/2000/svg','text');
-      dt.setAttribute('x',(x-9).toFixed(1));dt.setAttribute('y',(y-8.5).toFixed(1));
-      dt.setAttribute('text-anchor','middle');dt.setAttribute('dominant-baseline','middle');
-      dt.setAttribute('font-size','4');dt.setAttribute('fill','#1a1a0a');dt.setAttribute('font-family','Inter,sans-serif');dt.textContent='D';
-      g.appendChild(db);g.appendChild(dt);
-    }
-    svg.appendChild(g);
-  });
-}
-
-function mkCard(card){
-  const d=document.createElement('div');
-  d.className='card '+COL[card.suit];
-  d.innerHTML=`<span class="cr">${card.rank}</span><span class="cs">${SYM[card.suit]}</span><div class="rk">${card.rank}</div><div class="su">${SYM[card.suit]}</div>`;
-  return d;
-}
-
-function renderActs(disabled=false){
-  const g=document.getElementById('act-grid');g.innerHTML='';
-  const labels={fold:'Fold',call:'Call',raise3:'Raise 3BB',threebet:'3-Bet ~9BB',allin:'All-In'};
-  ['fold','call','raise3','threebet','allin'].forEach(id=>{
-    const b=document.createElement('button');b.className='abtn';b.textContent=labels[id];b.dataset.id=id;
-    if(disabled)b.disabled=true;else b.onclick=()=>pickAct(id);
-    g.appendChild(b);
-  });
-}
-
-// ═══════════════════════════════════
-// GAME FLOW
-// ═══════════════════════════════════
-function startGame(){
-  G={hands:parseInt(document.getElementById('set-hands')?.value||10),diff:document.getElementById('set-diff')?.value||'intermediate',cur:0,history:[],scores:[],posData:{},ev:0,streak:0,maxStreak:0,act:null,answered:false,curHand:null};
-  document.getElementById('sb-session').style.display='none';
-  show('scr-game');dealHand();
-}
-
-function dealHand(){
-  G.answered=false;G.act=null;
-  document.getElementById('res-box').className='res-box';
-  document.getElementById('next-row').style.display='none';
-  G.cur++;
-  let dk=shuffle(deck()),c1=dk[0],c2=dk[1],k=hkey(c1,c2),grp=getSKL(k);
-  if(G.diff==='beginner'){let t=0;while((grp>=5&&grp<=7)&&t<25){dk=shuffle(deck());c1=dk[0];c2=dk[1];k=hkey(c1,c2);grp=getSKL(k);t++;}}
-  // Weighted position selection — late position spots are more instructive
-  const POS_WEIGHTED=['UTG','UTG+1','UTG+2','HJ','HJ','CO','CO','BTN','BTN','BTN','SB','BB'];
-  const pos=POS_WEIGHTED[Math.floor(Math.random()*POS_WEIGHTED.length)];
-  const scen=pickScen(pos,G.diff);
-  G.curHand={c1,c2,k,grp,pos,scen};
-  const done=G.cur-1;
-  document.getElementById('prog-fill').style.width=(done/G.hands*100)+'%';
-  document.getElementById('prog-lbl').textContent=`Hand ${G.cur} of ${G.hands}`;
-  document.getElementById('prog-r').textContent=G.scores.length?Math.round(G.scores.reduce((a,b)=>a+b,0)/(G.scores.length*5)*100)+'%':'—';
-  drawTable(pos);
-  const hr=document.getElementById('hand-row');hr.innerHTML='';hr.appendChild(mkCard(c1));hr.appendChild(mkCard(c2));
-  document.getElementById('scen-txt').innerHTML=scenHTML(pos,scen);
-  renderActs();updateStrip();SFX.deal();
-}
-
-function pickAct(id){
-  if(G.answered)return;
-  document.querySelectorAll('.abtn').forEach(b=>b.classList.remove('sel'));
-  document.querySelector(`[data-id="${id}"]`)?.classList.add('sel');
-  G.act=id;submitAns();
-}
-
-function submitAns(){
-  if(G.answered||!G.act)return;
-  G.answered=true;
-  const h=G.curHand,correct=getCorrect(h.grp,h.pos,h.scen),result=scoreAct(G.act,correct);
-  G.scores.push(result.pts);
-  const pk=PSHORT[h.pos]||h.pos;
-  if(!G.posData[pk])G.posData[pk]={c:0,t:0};
-  G.posData[pk].t++;if(result.pts>=4)G.posData[pk].c++;
-  if(result.pts>=4){G.streak++;G.maxStreak=Math.max(G.streak,G.maxStreak);}else G.streak=0;
-  const evd=result.pts>=5?correct.ev:result.pts>=4?correct.ev*0.5:result.pts>=3?-0.2:result.pts>=2?-0.6:-1.1;
-  G.ev+=evd;
-  G.history.push({hand:h,pa:G.act,ca:correct.a,alt:correct.alt||null,pts:result.pts,reason:correct.reason,evd});
-  showResult(result,correct,h);updateStrip();updateSBSession();
-  if(result.pts===5)SFX.perfect();else if(result.pts>=4)SFX.correct();else if(result.pts>=3)SFX.partial();else SFX.wrong();
-  renderActs(true);document.getElementById('next-row').style.display='flex';
-}
-
-function showResult(result,correct,h){
-  const box=document.getElementById('res-box');
-  const tc=result.pts>=4?'correct':result.pts>=3?'partial':'wrong';
-  box.className='res-box show '+tc;
-  const labels={5:'Perfect — 5/5',4:'Good — 4/5',3:'Acceptable — 3/5',2:'Mistake — 2/5',1:'Error — 1/5',0:'Wrong — 0/5'};
-  const pill=`<span class="pill s${Math.max(1,result.pts)}">${result.pts}/5</span>`;
-  document.getElementById('res-title').innerHTML=labels[result.pts]+' &nbsp;<span style="font-size:10px;color:var(--muted)">Score</span>'+pill;
-  const gd=SKL[h.grp];const alt=correct.alt?` <em style="color:var(--muted)">(or ${ALBL[correct.alt]})</em>`:'';
-  document.getElementById('res-body').innerHTML=`<strong>Sklansky Group ${h.grp}</strong><span class="skl-inline">G${h.grp} — ${gd?.name||'?'}</span> · Position: <strong>${h.pos}</strong><br>Optimal: <strong>${ALBL[correct.a]}</strong>${alt} · You played: <strong>${ALBL[G.act]}</strong><br><br>${correct.reason}`;
-}
-
-function updateStrip(){
-  const tot=G.scores.length,sum=G.scores.reduce((a,b)=>a+b,0),pct=tot?Math.round(sum/(tot*5)*100):0;
-  const ev=G.ev;
-  const ec=document.getElementById('ev-chips');
-  ec.textContent=(ev>=0?'+':'')+ev.toFixed(1)+' BB';
-  ec.className='ev-val '+(ev>0?'g':ev<0?'b':'n');
-  const es=document.getElementById('ev-score');
-  es.textContent=tot?pct+'%':'—';
-  es.className='ev-val '+(pct>=60?'g':pct>=40?'n':'b');
-  const str=document.getElementById('ev-streak');
-  str.textContent=G.streak;
-  str.className='ev-val '+(G.streak>=3?'g':'n');
-  const dots=document.getElementById('sdots');dots.innerHTML='';
-  G.history.forEach(h=>{const d=document.createElement('div');d.className='sd '+(h.pts>=4?'c':h.pts>=3?'p':'w');dots.appendChild(d);});
-  for(let i=G.history.length;i<G.hands;i++){const d=document.createElement('div');d.className='sd n';dots.appendChild(d);}
-}
-
-function updateSBSession(){
-  const tot=G.scores.length;if(!tot)return;
-  const sum=G.scores.reduce((a,b)=>a+b,0),pct=Math.round(sum/(tot*5)*100),corr=G.scores.filter(s=>s>=4).length;
-  document.getElementById('sb-session').style.display='block';
-  document.getElementById('sb-stat-rows').innerHTML=`
-    <div class="srow"><span>Score</span><span class="sval">${pct}%</span></div>
-    <div class="srow"><span>Correct</span><span class="sval g">${corr}/${tot}</span></div>
-    <div class="srow"><span>Streak</span><span class="sval">${G.streak}</span></div>
-    <div class="srow"><span>Best streak</span><span class="sval">${G.maxStreak}</span></div>
-    <div class="srow"><span>Chip EV</span><span class="sval ${G.ev>=0?'g':'b'}">${G.ev>=0?'+':''}${G.ev.toFixed(1)} BB</span></div>
-  `;
-  const po=['UTG','EP','HJ','CO','BTN','SB','BB'];let lh='';
-  po.forEach(p=>{const d=G.posData[p];if(!d||!d.t)return;const pc=Math.round(d.c/d.t*100);lh+=`<div class="lrow"><span class="lpos">${p}</span><div class="lbw"><div class="lbf ${pc>=60?'lb-g':'lb-b'}" style="width:${pc}%"></div></div><span class="lpct">${pc}%</span></div>`;});
-  document.getElementById('sb-pos-leaks').innerHTML=lh;
-}
-
-function nextHand(){
-  SFX.next();
-  if(G.cur>=G.hands)showResults();else dealHand();
-}
-
-// ═══════════════════════════════════
-// RESULTS
-// ═══════════════════════════════════
-function showResults(){
-  SFX.end();show('scr-results');
-  const sum=G.scores.reduce((a,b)=>a+b,0),max=G.hands*5,pct=Math.round(sum/max*100),corr=G.scores.filter(s=>s>=4).length;
-  const tier=getFishTier(pct);
-  const justUnlocked=pct>=90&&!loadLT().hammerhead;
-  document.getElementById('r-icon').textContent=tier.icon;
-  document.getElementById('r-tier').textContent=tier.tier;
-  document.getElementById('r-score').textContent=pct+'%';
-  document.getElementById('r-desc').textContent=tier.desc;
-  const ev=G.ev;
-  document.getElementById('r-summary').innerHTML=`
-    <div class="ritem"><span>Hands</span><span class="rv n">${G.hands}</span></div>
-    <div class="ritem"><span>Correct</span><span class="rv g">${corr}/${G.hands}</span></div>
-    <div class="ritem"><span>Raw score</span><span class="rv">${sum}/${max}</span></div>
-    <div class="ritem"><span>Best streak</span><span class="rv">${G.maxStreak}</span></div>
-    <div class="ritem"><span>Chip EV</span><span class="rv ${ev>=0?'g':'b'}">${ev>=0?'+':''}${ev.toFixed(1)} BB</span></div>
-  `;
-  const po=['UTG','EP','HJ','CO','BTN','SB','BB'];let ph='';
-  po.forEach(p=>{const d=G.posData[p];if(!d||!d.t)return;const pc=Math.round(d.c/d.t*100);ph+=`<div class="ritem"><span>${p} (${d.t}h)</span><span class="rv ${pc>=60?'g':'b'}">${pc}%</span></div>`;});
-  document.getElementById('r-pos').innerHTML=ph||'<div style="font-size:11px;color:var(--muted)">Need more hands.</div>';
-  const lt=loadLT();lt.sessions++;lt.hands+=G.hands;lt.correct+=corr;lt.pts+=sum;lt.maxPts+=max;lt.bestStreak=Math.max(lt.bestStreak,G.maxStreak);lt.ev+=G.ev;
-  const wasLocked=!lt.hammerhead;
-  if(pct>=90&&wasLocked){lt.hammerhead=true;setTimeout(()=>{showToast('🦈 Hammerhead unlocked! Check Settings.');},1800);}
-  saveLT(lt);refreshHammerheadOption();
-  if(pct>=90&&wasLocked){const b=document.getElementById('r-hammerhead-banner');if(b)b.style.display='block';}
-  const ltPct=lt.maxPts>0?Math.round(lt.pts/lt.maxPts*100):0;const ltTier=getFishTier(ltPct);
-  document.getElementById('r-lifetime').innerHTML=`<div class="lt-bar">
-    <div class="lt-i"><div class="lt-v ${ltPct>=60?'g':'b'}">${ltPct}%</div><div class="lt-l">Accuracy</div></div>
-    <div class="lt-i"><div class="lt-v n">${lt.sessions}</div><div class="lt-l">Sessions</div></div>
-    <div class="lt-i"><div class="lt-v n">${lt.hands}</div><div class="lt-l">Hands</div></div>
-    <div class="lt-i"><div class="lt-v n">${ltTier.icon} ${ltTier.tier}</div><div class="lt-l">Current Rank</div></div>
-    <div class="lt-i"><div class="lt-v ${lt.ev>=0?'g':'b'}">${lt.ev>=0?'+':''}${lt.ev.toFixed(1)}</div><div class="lt-l">Lifetime EV</div></div>
+// ═══════════════════════════════════════════════
+//  CARD RENDERING
+// ═══════════════════════════════════════════════
+function renderCard(rank, suit) {
+  const colorClass = SUIT_COLOR[suit] === 'red' ? 'red-card' : 'black-card';
+  return `<div class="playing-card ${colorClass}">
+    <div class="card-rank-top">${rank}</div>
+    <div class="card-suit-top">${suit}</div>
+    <div class="card-center-suit">${suit}</div>
+    <div class="card-rank-bot">${rank}</div>
+    <div class="card-suit-bot">${suit}</div>
   </div>`;
-  updateSBLifetime();
-  // hand history
-  const hl=document.getElementById('hh-list');hl.innerHTML='';
-  G.history.forEach(h=>{
-    const c1=h.hand.c1,c2=h.hand.c2,suited=c1.suit===c2.suit?'s':'o';
-    const hs=c1.rank===c2.rank?c1.rank+c2.rank:c1.rank+c2.rank+suited;
-    const tc=h.pts>=4?'hc':h.pts>=3?'hp':'hw';
-    const div=document.createElement('div');div.className='hh-item '+tc;
-    div.innerHTML=`<div class="hh-top"><div><div class="hh-cards">${hs}<span class="skl-inline">G${h.hand.grp}</span></div><div class="hh-meta">${h.hand.pos} · ${h.hand.scen.replace(/_/g,' ')} · You: ${ALBL[h.pa]} · Best: ${ALBL[h.ca]}</div></div><span class="pill s${Math.max(1,h.pts)}">${h.pts}/5</span></div><div class="hh-rat">${h.reason}<br><br><span style="color:var(--muted);font-style:italic">EV: ${h.evd>=0?'+':''}${h.evd.toFixed(1)} BB</span></div>`;
-    div.onclick=()=>div.classList.toggle('ex');hl.appendChild(div);
-  });
 }
 
-// ═══════════════════════════════════
-// LOCALSTORAGE
-// ═══════════════════════════════════
-function loadLT(){try{const r=localStorage.getItem('fold_or_feed');if(r)return JSON.parse(r);}catch(e){}return{sessions:0,hands:0,correct:0,pts:0,maxPts:0,bestStreak:0,ev:0};}
-function saveLT(lt){try{localStorage.setItem('fold_or_feed',JSON.stringify(lt));}catch(e){}}
-function resetStats(){
-  if(!confirm('Reset all lifetime statistics? This cannot be undone.')) return;
-  try{localStorage.removeItem('fold_or_feed');}catch(e){}
-  updateSBLifetime();
-  showIntroLifetime();
-  refreshHammerheadOption();
-  // reset hammerhead option lock
-  const opt=document.getElementById('opt-hammerhead');
-  if(opt){opt.disabled=true;opt.textContent='🔒 Hammerhead (score 90%+ to unlock)';}
-  // if on settings/intro, refresh that view
-  const sel=document.getElementById('set-diff');
-  if(sel&&sel.value==='hammerhead') sel.value='intermediate';
-  showToast('Stats reset.');
+// ═══════════════════════════════════════════════
+//  DEAL HAND
+// ═══════════════════════════════════════════════
+function dealHand() {
+  // Pick random hand from library
+  const handDef = HAND_LIBRARY[Math.floor(Math.random() * HAND_LIBRARY.length)];
+  // Pick random position
+  const pos = POSITIONS[Math.floor(Math.random() * POSITIONS.length)];
+
+  // Assign suits
+  let suit1, suit2;
+  if (handDef.suited) {
+    suit1 = suit2 = SUITS[Math.floor(Math.random() * SUITS.length)];
+  } else {
+    suit1 = SUITS[Math.floor(Math.random() * SUITS.length)];
+    do { suit2 = SUITS[Math.floor(Math.random() * SUITS.length)]; } while (suit2 === suit1);
+  }
+
+  currentHandData = { handDef, pos, suit1, suit2 };
+
+  // Update UI
+  document.getElementById('handNumDisplay').textContent = `HAND ${currentHand + 1}`;
+  document.getElementById('positionTag').textContent = pos.name;
+  document.getElementById('positionDesc').textContent = pos.desc;
+  document.getElementById('cardsRow').innerHTML = renderCard(handDef.r1, suit1) + renderCard(handDef.r2, suit2);
+  document.getElementById('suitedBadge').textContent = handDef.suited ? '★ Suited' : 'Offsuit';
+
+  drawTable(pos.seat);
+
+  // Reset action state
+  selectedAction = null;
+  selectedBet = null;
+  document.getElementById('btnPlay').classList.remove('selected');
+  document.getElementById('btnFold').classList.remove('selected');
+  document.getElementById('betSection').classList.remove('visible');
+  document.getElementById('btnSubmit').classList.remove('visible');
+  document.querySelectorAll('.btn-bet').forEach(b => b.classList.remove('selected'));
+  document.getElementById('resultPanel').classList.remove('visible','correct','incorrect');
+  document.getElementById('resultPanel').style.display = 'none';
 }
-function isHammerheadUnlocked(){const lt=loadLT();return lt.hammerhead===true;}
-function unlockHammerhead(){const lt=loadLT();if(!lt.hammerhead){lt.hammerhead=true;saveLT(lt);}}
-function refreshHammerheadOption(){
-  const opt=document.getElementById('opt-hammerhead');
-  if(!opt)return;
-  if(isHammerheadUnlocked()){
-    opt.disabled=false;
-    opt.textContent='🦈 Hammerhead (Advanced)';
-  }else{
-    opt.disabled=true;
-    opt.textContent='🔒 Hammerhead (score 90%+ to unlock)';
+
+// ═══════════════════════════════════════════════
+//  ACTION SELECTION
+// ═══════════════════════════════════════════════
+function selectAction(action) {
+  selectedAction = action;
+  selectedBet = null;
+  document.querySelectorAll('.btn-bet').forEach(b => b.classList.remove('selected'));
+
+  if (action === 'play') {
+    document.getElementById('btnPlay').classList.add('selected');
+    document.getElementById('btnFold').classList.remove('selected');
+    document.getElementById('betSection').classList.add('visible');
+    document.getElementById('btnSubmit').classList.remove('visible');
+  } else {
+    document.getElementById('btnFold').classList.add('selected');
+    document.getElementById('btnPlay').classList.remove('selected');
+    document.getElementById('betSection').classList.remove('visible');
+    document.getElementById('btnSubmit').classList.add('visible');
   }
 }
 
-function updateSBLifetime(){
-  const lt=loadLT();if(!lt.sessions){document.getElementById('sb-lifetime-rows').innerHTML='<div style="font-size:11px;color:var(--muted)">No sessions yet.</div>';return;}
-  const pct=lt.maxPts>0?Math.round(lt.pts/lt.maxPts*100):0;const tier=getFishTier(pct);
-  const hhUnlocked=lt.hammerhead===true;
-  document.getElementById('sb-lifetime-rows').innerHTML=`
-    <div class="srow"><span>Rank</span><span class="sval">${tier.icon} ${tier.tier}</span></div>
-    <div class="srow"><span>All-time accuracy</span><span class="sval ${pct>=60?'g':'b'}">${pct}%</span></div>
-    <div class="srow"><span>Sessions</span><span class="sval">${lt.sessions}</span></div>
-    <div class="srow"><span>Hands drilled</span><span class="sval">${lt.hands}</span></div>
-    <div class="srow"><span>Best streak</span><span class="sval">${lt.bestStreak}</span></div>
-    <div class="srow"><span>Lifetime EV</span><span class="sval ${lt.ev>=0?'g':'b'}">${lt.ev>=0?'+':''}${lt.ev.toFixed(1)} BB</span></div>
-    <div class="srow"><span>Hammerhead</span><span class="sval ${hhUnlocked?'g':'m'}">${hhUnlocked?'🦈 Unlocked':'🔒 Score 90%+'}</span></div>
-  `;
-}
-
-function buildFishScale(){
-  const el=document.getElementById('sb-fish-scale');
-  el.innerHTML=FISH_TIERS.map(t=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px"><span style="font-size:18px;flex-shrink:0">${t.icon}</span><div><div style="color:var(--gold);font-weight:500;font-size:12px">${t.tier} <span style='color:var(--muted);font-weight:400;font-size:10px'>${t.min}%+</span></div><div style="color:#8aaa8a;font-size:10px;line-height:1.4;margin-top:1px">${t.short}</div></div></div>`).join('');
-}
-
-function showIntroLifetime(){
-  const lt=loadLT();const el=document.getElementById('lt-intro-wrap');
-  if(!lt.sessions){el.innerHTML='';return;}
-  const pct=lt.maxPts>0?Math.round(lt.pts/lt.maxPts*100):0;const tier=getFishTier(pct);
-  el.innerHTML=`<div class="icard"><h2>Your Progress</h2><div class="lt-bar">
-    <div class="lt-i"><div class="lt-v ${pct>=60?'g':'b'}">${pct}%</div><div class="lt-l">All-time</div></div>
-    <div class="lt-i"><div class="lt-v n">${tier.icon} ${tier.tier}</div><div class="lt-l">Current rank</div></div>
-    <div class="lt-i"><div class="lt-v n">${lt.sessions}</div><div class="lt-l">Sessions</div></div>
-    <div class="lt-i"><div class="lt-v n">${lt.hands}</div><div class="lt-l">Hands</div></div>
-    <div class="lt-i"><div class="lt-v ${lt.ev>=0?'g':'b'}">${lt.ev>=0?'+':''}${lt.ev.toFixed(1)}</div><div class="lt-l">Lifetime EV</div></div>
-  </div></div>`;
-}
-
-// ═══════════════════════════════════
-// SKLANSKY SIDEBAR
-// ═══════════════════════════════════
-function buildSKLSidebar(){
-  const el=document.getElementById('skl-list');el.innerHTML='';
-  Object.entries(SKL).forEach(([g,d])=>{
-    const div=document.createElement('div');div.className='skl-grp';
-    div.innerHTML=`<div class="skl-hdr" onclick="toggleSKL(${g})"><div class="skl-badge g${g}">${g}</div><div class="skl-title">${d.name}</div><span class="skl-arr" id="sa-${g}">▸</span></div><div class="skl-body" id="sb-${g}"><p class="skl-rule">${d.rule}</p><div class="skl-hands">${d.hands.map(h=>`<span class="skl-hand">${h}</span>`).join('')}</div></div>`;
-    el.appendChild(div);
+function selectBet(bet) {
+  selectedBet = bet;
+  document.querySelectorAll('.btn-bet').forEach(b => {
+    b.classList.toggle('selected', b.textContent === bet);
   });
-}
-function toggleSKL(g){const b=document.getElementById('sb-'+g),a=document.getElementById('sa-'+g);const o=b.classList.toggle('open');a.textContent=o?'▾':'▸';}
-
-// ═══════════════════════════════════
-// UI UTILS
-// ═══════════════════════════════════
-function show(id){['scr-intro','scr-game','scr-results'].forEach(s=>document.getElementById(s).style.display=s===id?'block':'none');}
-function showIntro(){show('scr-intro');
-  updateMobileNav();showIntroLifetime();updateSBLifetime();}
-function toggleSidebar(side){
-  const sb=document.getElementById(side==='left'?'sb-left':'sb-right');
-  const btn=document.getElementById(side==='left'?'btn-stats':'btn-skl');
-  sb.classList.toggle('closed');
-  btn.classList.toggle('on');
-}
-function toggleMute(){
-  const m=SFX.toggleMute();
-  document.getElementById('btn-mute').textContent=m?'🔇 Mute':'🔊 Mute';
-  const mobIcon=document.getElementById('mob-mute-icon');
-  if(mobIcon) mobIcon.textContent=m?'🔇':'🔊';
-}
-function showToast(msg){
-  let t=document.getElementById('toast-el');
-  if(!t){t=document.createElement('div');t.id='toast-el';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--gold);color:#1a1a0a;padding:9px 22px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999';document.body.appendChild(t);}
-  t.textContent=msg;t.style.opacity='1';
-  clearTimeout(t._to);t._to=setTimeout(()=>t.style.opacity='0',3000);
+  document.getElementById('btnSubmit').classList.add('visible');
 }
 
-document.addEventListener('DOMContentLoaded',()=>{
-  buildSKLSidebar();buildFishScale();updateSBLifetime();showIntroLifetime();refreshHammerheadOption();show('scr-intro');
-  // Sidebars start closed by default (set in HTML)
-});
+// ═══════════════════════════════════════════════
+//  SUBMIT ANSWER
+// ═══════════════════════════════════════════════
+function submitAnswer() {
+  if (!selectedAction) return;
+  if (selectedAction === 'play' && !selectedBet) return;
+
+  const { handDef, pos, suit1, suit2 } = currentHandData;
+  const shouldPlay = handDef.play.includes(pos.name);
+  const playerPlayed = selectedAction === 'play';
+  const isCorrect = playerPlayed === shouldPlay;
+
+  if (isCorrect) {
+    score += 10;
+    correct++;
+  }
+  currentHand++;
+
+  const handStr = `${handDef.r1}${suit1}${handDef.r2}${suit2}`;
+  history.push({ handStr, pos: pos.name, isCorrect, shouldPlay, playerPlayed, betStr: selectedBet, handDef });
+
+  // Show result
+  const panel = document.getElementById('resultPanel');
+  panel.style.display = 'block';
+  panel.classList.add('visible', isCorrect ? 'correct' : 'incorrect');
+  panel.classList.remove(isCorrect ? 'incorrect' : 'correct');
+
+  document.getElementById('resultHeader').textContent = isCorrect ? '✓ Correct' : '✗ Wrong call';
+
+  const correctAction = shouldPlay ? `Raise (open-raise from ${pos.name})` : `Fold from ${pos.name}`;
+  const playerAction = playerPlayed ? `You chose: Play (${selectedBet})` : 'You chose: Fold';
+  document.getElementById('resultAnswer').innerHTML =
+    `<strong>${playerAction}</strong><br>Correct action: <strong>${correctAction}</strong>`;
+
+  document.getElementById('rationaleBox').textContent = handDef.rationale;
+  document.getElementById('rationaleBox').classList.remove('open');
+
+  // Update scores
+  updateScoreDisplay();
+
+  // Disable buttons
+  document.getElementById('btnPlay').disabled = true;
+  document.getElementById('btnFold').disabled = true;
+  document.querySelectorAll('.btn-bet').forEach(b => b.disabled = true);
+  document.getElementById('btnSubmit').disabled = true;
+}
+
+function toggleRationale() {
+  document.getElementById('rationaleBox').classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════
+//  NEXT HAND / SCORE
+// ═══════════════════════════════════════════════
+function nextHand() {
+  document.getElementById('btnPlay').disabled = false;
+  document.getElementById('btnFold').disabled = false;
+  document.querySelectorAll('.btn-bet').forEach(b => b.disabled = false);
+  document.getElementById('btnSubmit').disabled = false;
+
+  if (currentHand >= totalHands) {
+    showFinalScreen();
+  } else {
+    dealHand();
+  }
+}
+
+function updateScoreDisplay() {
+  const pct = currentHand > 0 ? Math.round((score / (currentHand * 10)) * 100) : 0;
+  document.getElementById('scoreDisplay').textContent = score;
+  document.getElementById('handLabel').textContent = `Hand ${Math.min(currentHand + 1, totalHands)} of ${totalHands}`;
+  document.getElementById('scoreLabel').textContent = `${correct} / ${currentHand} correct`;
+  document.getElementById('progressBar').style.width = `${(currentHand / totalHands) * 100}%`;
+}
+
+// ═══════════════════════════════════════════════
+//  FINAL SCREEN
+// ═══════════════════════════════════════════════
+function showFinalScreen() {
+  document.getElementById('drillSection').style.display = 'none';
+  const finalScreen = document.getElementById('finalScreen');
+  finalScreen.classList.add('visible');
+
+  const pct = Math.round((score / (totalHands * 10)) * 100);
+  document.getElementById('finalGrade').textContent = pct + '%';
+  document.getElementById('progressBar').style.width = '100%';
+
+  // Coach note
+  let note = '';
+  if (pct === 100) {
+    note = '<strong>Flawless execution.</strong> You have a solid grasp of positional hand selection. Now focus on bet sizing, 3-bet ranges, and postflop continuation — the discipline you showed here carries through every street. The piranha folds nothing it can eat, and neither should you.';
+  } else if (pct >= 80) {
+    note = '<strong>Strong session.</strong> You understand the core positional principles. Review your mistakes — they are almost certainly hands where you played too loose from early positions. That is the most common leak at the intermediate level.';
+  } else if (pct >= 60) {
+    note = '<strong>Progress, but there are leaks.</strong> The hands you missed are likely weak kings and queens from early position, or suited connectors you overvalued. Study the rationale for each wrong answer carefully before the next session.';
+  } else {
+    note = '<strong>You are playing too many hands.</strong> This is the single biggest leak in recreational poker. Tighten your UTG/UTG+1/MP ranges dramatically. Only the top 12–15% of hands should be played from early position. Review the rationale for every hand you missed.';
+  }
+  document.getElementById('coachNote').innerHTML = note;
+
+  // Breakdown list
+  const list = document.getElementById('breakdownList');
+  list.innerHTML = history.map(h => `
+    <div class="breakdown-item">
+      <span>
+        <span class="breakdown-hand">${h.handStr}</span>
+        <span class="breakdown-pos"> · ${h.pos}</span>
+      </span>
+      <span class="breakdown-result ${h.isCorrect ? 'ok' : 'wrong'}">
+        ${h.isCorrect ? '✓ +10' : '✗  +0'}
+      </span>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════════════════════
+function openSettings() { document.getElementById('settingsModal').classList.add('open'); }
+function closeSettings() { document.getElementById('settingsModal').classList.remove('open'); }
+function saveSettings() {
+  const val = parseInt(document.getElementById('handsInput').value);
+  if (val >= 5 && val <= 50) totalHands = val;
+  closeSettings();
+  restartGame();
+}
+
+// ═══════════════════════════════════════════════
+//  RESTART
+// ═══════════════════════════════════════════════
+function restartGame() {
+  currentHand = 0;
+  score = 0;
+  correct = 0;
+  history = [];
+  selectedAction = null;
+  selectedBet = null;
+  document.getElementById('drillSection').style.display = 'block';
+  document.getElementById('finalScreen').classList.remove('visible');
+  document.getElementById('scoreDisplay').textContent = '0';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('handLabel').textContent = `Hand 1 of ${totalHands}`;
+  document.getElementById('scoreLabel').textContent = '0 / 0 correct';
+  dealHand();
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+dealHand();
 </script>
 </body>
 </html>
